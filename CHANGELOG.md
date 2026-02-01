@@ -1,5 +1,16 @@
 # Changelog - Ghost CMS Skill
 
+## [2.0.1] - 2026-02-01
+
+### 📝 Documentation
+- **analytics.md** - Major update with API version and authentication coverage
+  - Documented Ghost 6.0 analytics limitations with integration tokens
+  - Added version compatibility notes (API v5.0 vs Ghost 6.0)
+  - Clarified what analytics ARE available vs NOT available
+  - Added authentication type comparison (integration vs user vs Tinybird)
+  - Expanded troubleshooting section
+  - Added best practices for working within API limitations
+
 ## [2.0.0] - 2026-02-01
 
 ### 🔧 BREAKING CHANGES

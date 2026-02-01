@@ -2,9 +2,52 @@
 
 Subscriber counts, popular content, and performance metrics.
 
-## Subscriber Metrics
+## Version & API Coverage
 
-### Total Subscriber Count
+**Ghost Version Support:**
+- Ghost 5.0+ - Full support
+- Ghost 6.0+ - Compatible (but limited analytics access)
+
+**API Version Used:** `v5.0` (Accept-Version header)
+
+**Important:** While Ghost 6.0 introduced native analytics, **integration API tokens do not have access to the full analytics suite**. See [Limitations](#limitations) below for details.
+
+## Authentication Types & Capabilities
+
+### Integration Token Authentication (Current)
+**What you CAN access:**
+- ✅ Basic member counts and lists
+- ✅ Post metadata (including email stats when available)
+- ✅ Email engagement metrics (opens, clicks)
+- ✅ Tag/author statistics
+- ✅ Comment counts
+- ✅ Newsletter subscriber counts
+
+**What you CANNOT access:**
+- ❌ Web traffic analytics (page views, sources, devices)
+- ❌ Real-time visitor data
+- ❌ Detailed engagement analytics from Ghost Analytics
+- ❌ Member behavior analytics beyond email
+- ❌ Advanced stats endpoints (`/stats/*`)
+
+### User Authentication (Not Recommended for Automation)
+**Full access** to all analytics features, but requires:
+- Email/password login
+- Session management
+- 2FA support
+- Not suitable for programmatic access
+
+### Tinybird Integration (Advanced)
+For self-hosted Ghost, you can configure Tinybird directly for analytics:
+- Requires separate Tinybird account
+- Can query analytics data via Tinybird API
+- See Ghost's [Tinybird integration docs](https://ghost.org/integrations/tinybird)
+
+## Available Analytics (Integration Token)
+
+### Subscriber Metrics
+
+#### Total Subscriber Count
 
 ```bash
 curl "${GHOST_URL}/ghost/api/admin/members/stats/count/" \
@@ -23,7 +66,9 @@ Returns:
 }
 ```
 
-### New Subscribers (Time Period)
+**Note:** This endpoint is available but may return permissions error with some integration tokens.
+
+#### New Subscribers (Time Period)
 
 ```bash
 # Subscribers added in last 30 days
@@ -34,53 +79,83 @@ curl "${GHOST_URL}/ghost/api/admin/members/?filter=created_at:>'${THIRTY_DAYS_AG
   jq '.members | length'
 ```
 
-### Subscriber Growth Trend
-
-```bash
-# Get member stats over time
-curl "${GHOST_URL}/ghost/api/admin/members/stats/mrr/" \
-  -H "Authorization: Ghost ${GHOST_KEY}"
-```
-
-Returns monthly recurring revenue (MRR) and subscriber trends.
-
-### Recent Subscribers
+#### Recent Subscribers
 
 ```bash
 curl "${GHOST_URL}/ghost/api/admin/members/?order=created_at%20desc&limit=10" \
   -H "Authorization: Ghost ${GHOST_KEY}"
 ```
 
-## Content Performance
+### Email Performance Metrics
 
-### Most Viewed Posts
+**Available for posts that were sent as newsletters:**
 
-Ghost doesn't track views natively in API. For view counts, you need:
-- Google Analytics integration
-- Ghost Analytics (Pro feature)
-- Custom tracking solution
-
-**With Ghost Analytics (Pro):**
 ```bash
-curl "${GHOST_URL}/ghost/api/admin/stats/post/${POST_ID}/" \
+# Get post with email stats
+curl "${GHOST_URL}/ghost/api/admin/posts/${POST_ID}/?include=email" \
   -H "Authorization: Ghost ${GHOST_KEY}"
 ```
 
-**Alternative approach:** Use engagement proxies:
-- Member count per post
-- Comment count per post
-- Newsletter open rates
-
-### Posts by Comment Count
-
-```bash
-# Get all posts with comment counts
-curl "${GHOST_URL}/ghost/api/admin/posts/?limit=all&include=count.comments" \
-  -H "Authorization: Ghost ${GHOST_KEY}" | \
-  jq '.posts | sort_by(.count.comments) | reverse | .[0:10]'
+Returns email engagement data:
+```json
+{
+  "posts": [{
+    "email": {
+      "email_count": 12,
+      "delivered_count": 12,
+      "opened_count": 5,
+      "failed_count": 0,
+      "subject": "Post Title",
+      "status": "submitted"
+    }
+  }]
+}
 ```
 
-Returns top 10 posts by comment count.
+**Metrics available:**
+- `email_count` - Total emails sent
+- `delivered_count` - Successfully delivered
+- `opened_count` - Unique opens
+- `failed_count` - Delivery failures
+
+**To calculate open rate:**
+```bash
+curl "${GHOST_URL}/ghost/api/admin/posts/${POST_ID}/?include=email" \
+  -H "Authorization: Ghost ${GHOST_KEY}" | \
+  jq '.posts[0].email | {
+    sent: .email_count,
+    opened: .opened_count,
+    open_rate: ((.opened_count / .email_count) * 100 | round)
+  }'
+```
+
+### Content Engagement Proxies
+
+Since direct view counts aren't available, use these engagement indicators:
+
+#### Posts by Email Opens
+
+```bash
+curl "${GHOST_URL}/ghost/api/admin/posts/?filter=status:published&limit=50&include=email" \
+  -H "Authorization: Ghost ${GHOST_KEY}" | \
+  jq '[.posts[] | select(.email != null) | {
+    title: .title,
+    opened: .email.opened_count,
+    sent: .email.email_count,
+    open_rate: ((.email.opened_count / .email.email_count) * 100 | round)
+  }] | sort_by(.opened) | reverse | .[0:10]'
+```
+
+#### Posts by Click Count
+
+```bash
+curl "${GHOST_URL}/ghost/api/admin/posts/?limit=50&include=count.clicks" \
+  -H "Authorization: Ghost ${GHOST_KEY}" | \
+  jq '.posts | sort_by(.count.clicks) | reverse | .[0:10] | .[] | {
+    title: .title,
+    clicks: .count.clicks
+  }'
+```
 
 ### Tag/Topic Performance
 
@@ -93,7 +168,7 @@ curl "${GHOST_URL}/ghost/api/admin/tags/?limit=all&include=count.posts" \
 
 Returns tags sorted by number of posts.
 
-### Popular Tags (Last 6 Months)
+#### Popular Tags (Last 6 Months)
 
 ```bash
 # Get posts from last 6 months
@@ -104,11 +179,9 @@ curl "${GHOST_URL}/ghost/api/admin/posts/?filter=published_at:>'${SIX_MONTHS_AGO
   jq '[.posts[].tags[].name] | group_by(.) | map({tag: .[0], count: length}) | sort_by(.count) | reverse'
 ```
 
-Returns tag frequency in recent posts.
+### Member Activity
 
-## Member Activity
-
-### Active Members (Recent Logins)
+#### Active Members (Recent Logins)
 
 ```bash
 # Members who logged in recently
@@ -119,7 +192,7 @@ curl "${GHOST_URL}/ghost/api/admin/members/?filter=last_seen_at:>'${LAST_WEEK}'&
   jq '.members | length'
 ```
 
-### Paid vs Free Distribution
+#### Paid vs Free Distribution
 
 ```bash
 curl "${GHOST_URL}/ghost/api/admin/members/stats/count/" \
@@ -149,22 +222,9 @@ Returns:
     "slug": "newsletter-slug",
     "sender_email": "sender@example.com",
     "status": "active",
-    "subscribe_on_signup": true,
-    "count": {
-      "members": 1234,
-      "posts": 56
-    }
+    "subscribe_on_signup": true
   }]
 }
-```
-
-### Email Open Rates (Pro)
-
-If using Ghost Analytics Pro:
-
-```bash
-curl "${GHOST_URL}/ghost/api/admin/stats/newsletter/${POST_ID}/" \
-  -H "Authorization: Ghost ${GHOST_KEY}"
 ```
 
 ## Content Insights
@@ -221,7 +281,7 @@ curl "${GHOST_URL}/ghost/api/admin/posts/?filter=published_at:>'${WEEK_START}'&l
 ### Posts Today
 
 ```bash
-TODAY=$(date -u '+%Y-%m-%dT00:00:00.000Z')
+TODAY=$(date -u -v '+%Y-%m-%dT00:00:00.000Z')
 
 curl "${GHOST_URL}/ghost/api/admin/posts/?filter=published_at:>'${TODAY}'&limit=all" \
   -H "Authorization: Ghost ${GHOST_KEY}"
@@ -243,6 +303,20 @@ curl "${GHOST_URL}/ghost/api/admin/members/?filter=created_at:>'${MONTH_START}'&
 
 See "Popular Tags (Last 6 Months)" above.
 
+### "What was my most popular post by email opens?"
+
+```bash
+curl "${GHOST_URL}/ghost/api/admin/posts/?filter=status:published&limit=all&include=email" \
+  -H "Authorization: Ghost ${GHOST_KEY}" | \
+  jq '[.posts[] | select(.email != null)] | sort_by(.email.opened_count) | reverse | .[0] | {
+    title: .title,
+    published_at: .published_at,
+    sent: .email.email_count,
+    opened: .email.opened_count,
+    open_rate: ((.email.opened_count / .email.email_count) * 100 | round)
+  }'
+```
+
 ### "When was my last subscriber-exclusive post?"
 
 ```bash
@@ -252,18 +326,6 @@ curl "${GHOST_URL}/ghost/api/admin/posts/?filter=visibility:paid&order=published
     title: .title,
     published_at: .published_at,
     days_ago: ((now - (.published_at | fromdateiso8601)) / 86400 | floor)
-  }'
-```
-
-### "Which posts got the most comments?"
-
-```bash
-curl "${GHOST_URL}/ghost/api/admin/posts/?limit=all&include=count.comments" \
-  -H "Authorization: Ghost ${GHOST_KEY}" | \
-  jq '.posts | sort_by(.count.comments) | reverse | .[0:10] | .[] | {
-    title: .title,
-    comments: .count.comments,
-    published_at: .published_at
   }'
 ```
 
@@ -280,30 +342,127 @@ curl "${GHOST_URL}/ghost/api/admin/members/?limit=all" \
 ### Export Post Metrics
 
 ```bash
-curl "${GHOST_URL}/ghost/api/admin/posts/?limit=all&include=tags,authors,count.comments" \
+curl "${GHOST_URL}/ghost/api/admin/posts/?limit=all&include=tags,authors,email" \
   -H "Authorization: Ghost ${GHOST_KEY}" | \
-  jq -r '.posts[] | [.title, .published_at, (.tags | map(.name) | join(";")), .count.comments] | @csv' > posts.csv
+  jq -r '.posts[] | [
+    .title,
+    .published_at,
+    (.tags | map(.name) | join(";")),
+    (.email.email_count // 0),
+    (.email.opened_count // 0),
+    (if .email then ((.email.opened_count / .email.email_count) * 100 | round) else 0 end)
+  ] | @csv' > posts.csv
 ```
 
 ## Limitations
 
-**View/traffic data:** Not available in Admin API unless using Ghost Analytics Pro
+### Ghost 6.0 Analytics Not Available via API Token
 
-**Alternatives for view tracking:**
-- Google Analytics integration
-- Custom analytics with Ghost webhooks
-- Third-party tools (Plausible, Fathom, etc.)
+Ghost 6.0 introduced a comprehensive native analytics suite with:
+- Real-time traffic monitoring
+- Audience filtering (public/free/paid)
+- Source tracking
+- Device/browser analytics
+- Content performance metrics
 
-**Engagement proxies:**
-- Comment counts (good indicator of engagement)
-- Newsletter subscriber counts
-- Member growth rates
-- Social shares (if tracked externally)
+**However:** These features are **NOT accessible via integration API tokens**.
+
+**Error when attempting to access:**
+```bash
+curl "${GHOST_URL}/ghost/api/admin/stats/" \
+  -H "Authorization: Ghost ${GHOST_KEY}"
+```
+
+Returns:
+```json
+{
+  "errors": [{
+    "message": "API tokens do not have permission to access this endpoint",
+    "type": "NoPermissionError"
+  }]
+}
+```
+
+### What Analytics ARE Available
+
+With integration tokens, you can access:
+- ✅ Email engagement (opens, clicks, delivery status)
+- ✅ Member counts and growth
+- ✅ Tag/author usage statistics
+- ✅ Newsletter subscriber counts
+- ✅ Publishing frequency metrics
+
+### Accessing Full Ghost Analytics
+
+**Option 1: Ghost Admin Web Interface**
+- Log into your Ghost admin panel
+- Navigate to Analytics section
+- View all traffic, engagement, and member data
+- Export reports manually
+
+**Option 2: User Authentication (Advanced)**
+- Use email/password login via session API
+- Requires 2FA support
+- Not recommended for automation
+- See Ghost's [user authentication docs](https://ghost.org/docs/admin-api/#user-authentication)
+
+**Option 3: Tinybird (Self-Hosted Only)**
+If you're self-hosting Ghost:
+- Configure Tinybird integration
+- Query analytics via Tinybird API directly
+- Requires separate Tinybird account
+- See [Ghost's Tinybird integration guide](https://ghost.org/integrations/tinybird)
+
+**Option 4: Third-Party Analytics**
+Integrate external analytics tools:
+- Google Analytics
+- Plausible Analytics
+- Fathom Analytics
+- Custom tracking with webhooks
+
+### API Version Notes
+
+**Current API Version:** `v5.0`
+- Used in all skill requests via `Accept-Version` header
+- Fully compatible with Ghost 5.x and 6.x
+- Some Ghost 6.0 features may not be exposed in v5.0 API
+
+**Future:** Ghost may introduce `v6.0` API with:
+- Improved analytics access
+- New endpoints
+- Enhanced authentication options
+
+Monitor [Ghost's API changelog](https://ghost.org/docs/faq/api-versioning/) for updates.
 
 ## Best Practices
 
+- **Use email metrics** - Most reliable engagement indicator available
 - **Cache results** - Analytics queries can be resource-intensive
 - **Batch requests** - Get all data in one call when possible
 - **Use time filters** - Narrow queries to relevant time periods
 - **Export periodically** - Keep historical data for trend analysis
 - **Combine metrics** - Look at multiple signals for full picture
+- **Consider external tools** - For traffic analytics, use Google Analytics or similar
+
+## Troubleshooting
+
+### "NoPermissionError" on stats endpoints
+
+This is expected with integration tokens. Stats endpoints require user authentication.
+
+**Solution:** Access analytics via Ghost Admin web interface, or use email engagement metrics as proxy.
+
+### "UPDATE_CLIENT" error
+
+Your API version (`v5.0`) is behind Ghost's current version.
+
+**Solution:** This is informational. Ghost 6.x is backwards compatible with v5.0 API. No action needed unless you want to upgrade to a future v6.0 API when available.
+
+### Missing email metrics on posts
+
+Email metrics only appear on posts that were sent as newsletters.
+
+**Check:**
+- Post must be published
+- Post must have been sent to newsletter subscribers
+- Include `?include=email` in your request
