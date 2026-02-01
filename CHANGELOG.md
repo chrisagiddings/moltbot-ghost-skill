@@ -1,5 +1,27 @@
 # Changelog - Ghost CMS Skill
 
+## [2.0.2] - 2026-02-01
+
+### 📝 Documentation
+- **lexical-cards.md** - New comprehensive Lexical card type reference
+  - Documented all confirmed working card types (callout, gallery, image, bookmark, signup, markdown, horizontal rule)
+  - Added JSON structure examples for each card type
+  - Documented color options, layout options, and parameters
+  - Included tips and best practices
+  - Listed unverified card types for future testing
+  - Reverse-engineered from published content analysis
+
+- **README.md** - Enhanced with content type support information
+  - Added "Supported Content Types" section with working/restricted breakdown
+  - Documented API restrictions (snippets, user management)
+  - Listed unverified card types that need testing
+  - Added lexical-cards.md to reference guide links
+
+### 🔍 Analysis
+- Examined published wallpaper posts to extract real-world Lexical structures
+- Confirmed 8 major card types work via integration token API
+- Identified snippets API restriction (403 Forbidden) - see issue #13
+
 ## [2.0.1] - 2026-02-01
 
 ### 📝 Documentation

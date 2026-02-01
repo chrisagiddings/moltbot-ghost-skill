@@ -155,6 +155,7 @@ node ghost-api.js '/posts/<id>/?formats=html'
 ### Reference Guides
 - **[setup.md](ghost-cms-skill/references/setup.md)** - Authentication and configuration
 - **[content.md](ghost-cms-skill/references/content.md)** - Creating and managing posts (Lexical format)
+- **[lexical-cards.md](ghost-cms-skill/references/lexical-cards.md)** - Complete Lexical card type reference
 - **[analytics.md](ghost-cms-skill/references/analytics.md)** - Analytics capabilities and limitations
 - **[comments.md](ghost-cms-skill/references/comments.md)** - Comment management and responses
 - **[members.md](ghost-cms-skill/references/members.md)** - Subscriber tier management
@@ -212,6 +213,56 @@ const content = structuredToLexical([
 
 See [LEXICAL-MIGRATION.md](ghost-cms-skill/LEXICAL-MIGRATION.md) for migration guide and format details.
 
+## Supported Content Types
+
+### ✅ Confirmed Working via API
+
+All of these Lexical card types work with integration token authentication:
+
+**Text & Structure:**
+- ✅ Paragraphs
+- ✅ Headings (H1-H6)
+- ✅ Horizontal rules (dividers)
+- ✅ Markdown cards (inline code/formatting)
+
+**Media:**
+- ✅ Image cards (single images with captions, alt text)
+- ✅ Gallery cards (multi-image responsive layouts)
+- ✅ Bookmark cards (link previews)
+
+**Layout:**
+- ✅ Callout/info boxes (with emoji and colored backgrounds)
+- ✅ Signup cards (newsletter subscription forms)
+
+See [lexical-cards.md](ghost-cms-skill/references/lexical-cards.md) for complete documentation with JSON examples.
+
+### ❌ Known Restrictions
+
+**Snippets:**
+- ❌ Cannot be accessed via integration token API (403 Forbidden)
+- Must be manually inserted via Ghost Admin UI
+- See [issue #13](https://github.com/chrisagiddings/moltbot-ghost-skill/issues/13) for planned workaround
+
+**Limited User Operations:**
+- ❌ Cannot create, edit, or delete users via integration tokens
+- ✅ Can browse and read user information
+- Requires staff access token or user authentication for full access
+
+### ⚠️ Unverified Card Types
+
+These card types exist in Ghost's editor but haven't been tested via API:
+
+- Button cards
+- Toggle/accordion cards
+- Audio cards
+- Video cards
+- File cards
+- Product cards (e-commerce)
+- Email CTA cards
+- Third-party embeds (YouTube, Twitter, etc.)
+
+If you test any of these, please document and contribute! See [lexical-cards.md](ghost-cms-skill/references/lexical-cards.md) for contribution guidelines.
+
 ## Requirements
 
 - **Moltbot** v2026.1+
@@ -252,6 +303,11 @@ This skill follows [Moltbot skill standards](https://github.com/openclaw/opencla
 - Page creation and management
 
 ## Version History
+
+### v2.0.2 (2026-02-01)
+- **Documentation:** Added comprehensive Lexical card type reference (lexical-cards.md)
+- **Documentation:** Updated README with supported content types and API restrictions
+- **Analysis:** Documented all working card types from published content
 
 ### v2.0.1 (2026-02-01)
 - **Documentation:** Updated analytics.md with Ghost 6.0 API limitations and version coverage
