@@ -118,3 +118,26 @@ Special thanks to the Ghost and Moltbot teams for building incredible platforms.
 ---
 
 **Note:** This skill is community-created and not officially maintained by Ghost or Moltbot. Use at your own discretion.
+
+## Technical Details
+
+### JWT Authentication
+
+Ghost Admin API requires JWT token generation (see [#1](https://github.com/chrisagiddings/moltbot-ghost-skill/issues/1)).
+
+The skill includes `scripts/ghost-api.js` helper for authenticated API calls:
+
+```bash
+# Example: Get site info
+node scripts/ghost-api.js /site/
+
+# Example: List posts
+node scripts/ghost-api.js '/posts/?limit=5'
+```
+
+The helper automatically:
+- Reads credentials from `~/.config/ghost/`
+- Generates JWT tokens (5min expiry)
+- Handles API requests with proper authentication
+
+For direct curl usage, see the reference files for JWT generation patterns.
