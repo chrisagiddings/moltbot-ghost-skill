@@ -2,6 +2,16 @@
 
 Creating, publishing, scheduling, and managing Ghost posts and pages.
 
+## Content Format: Lexical
+
+**Ghost 5.0+ uses Lexical format** for all content creation and updates. Ghost's Lexical editor is built on Meta's Lexical framework (same tech powering Facebook/Instagram).
+
+**Important:**
+- Send content in `lexical` field (JSON string)
+- Ghost stores it internally as mobiledoc (legacy format)
+- When reading, use `?formats=html` to get rendered HTML
+- HTML and mobiledoc are deprecated for write operations
+
 ## Creating Posts
 
 ### Basic Post Creation
@@ -13,11 +23,132 @@ curl -X POST "${GHOST_URL}/ghost/api/admin/posts/" \
   -d '{
     "posts": [{
       "title": "Your Post Title",
-      "html": "<p>Your content here</p>",
+      "lexical": "{\"root\":{\"children\":[{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Your content here\",\"type\":\"extended-text\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
       "status": "draft"
     }]
   }'
 ```
+
+### Lexical Structure
+
+**Basic paragraph:**
+```json
+{
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "Your paragraph text here",
+            "type": "extended-text",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "type": "paragraph",
+        "version": 1
+      }
+    ],
+    "direction": "ltr",
+    "format": "",
+    "indent": 0,
+    "type": "root",
+    "version": 1
+  }
+}
+```
+
+**Heading (H2):**
+```json
+{
+  "children": [
+    {
+      "detail": 0,
+      "format": 1,
+      "mode": "normal",
+      "style": "",
+      "text": "Heading Text",
+      "type": "extended-text",
+      "version": 1
+    }
+  ],
+  "direction": "ltr",
+  "format": "",
+  "indent": 0,
+  "type": "heading",
+  "version": 1,
+  "tag": "h2"
+}
+```
+
+**Multiple paragraphs:**
+```json
+{
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "First paragraph",
+            "type": "extended-text",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "type": "paragraph",
+        "version": 1
+      },
+      {
+        "children": [
+          {
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "Second paragraph",
+            "type": "extended-text",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "type": "paragraph",
+        "version": 1
+      }
+    ],
+    "direction": "ltr",
+    "format": "",
+    "indent": 0,
+    "type": "root",
+    "version": 1
+  }
+}
+```
+
+**Text formatting:**
+- `"format": 0` - Normal text
+- `"format": 1` - Bold
+- `"format": 2` - Italic
+- `"format": 3` - Bold + Italic
+
+**Heading tags:**
+- `"tag": "h1"` - H1 heading
+- `"tag": "h2"` - H2 heading  
+- `"tag": "h3"` - H3 heading
+- `"tag": "h4"` - H4 heading
 
 ### Post with Full Metadata
 
@@ -28,7 +159,7 @@ curl -X POST "${GHOST_URL}/ghost/api/admin/posts/" \
   -d '{
     "posts": [{
       "title": "Complete Post Example",
-      "html": "<p>Full post content with formatting</p>",
+      "lexical": "{\"root\":{\"children\":[{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Full post content with formatting\",\"type\":\"extended-text\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
       "status": "draft",
       "tags": [
         {"name": "Technology"},
@@ -83,7 +214,7 @@ curl -X PUT "${GHOST_URL}/ghost/api/admin/posts/${POST_ID}/" \
 
 ## Updating Posts
 
-### Update Content
+### Update Content (Lexical)
 
 ```bash
 curl -X PUT "${GHOST_URL}/ghost/api/admin/posts/${POST_ID}/" \
@@ -91,7 +222,7 @@ curl -X PUT "${GHOST_URL}/ghost/api/admin/posts/${POST_ID}/" \
   -H "Content-Type: application/json" \
   -d '{
     "posts": [{
-      "html": "<p>Updated content</p>",
+      "lexical": "{\"root\":{\"children\":[{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Updated content\",\"type\":\"extended-text\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
       "updated_at": "2026-01-31T12:00:00.000Z"
     }]
   }'
@@ -125,6 +256,15 @@ Tags are **replaced**, not appended. Include existing tags to keep them.
 curl "${GHOST_URL}/ghost/api/admin/posts/?limit=15&include=authors,tags" \
   -H "Authorization: Ghost ${GHOST_KEY}"
 ```
+
+### Get Post with HTML Output
+
+```bash
+curl "${GHOST_URL}/ghost/api/admin/posts/${POST_ID}/?formats=html" \
+  -H "Authorization: Ghost ${GHOST_KEY}"
+```
+
+Returns rendered HTML in the `html` field for display purposes.
 
 ### Filter by Status
 
@@ -173,7 +313,7 @@ curl -X POST "${GHOST_URL}/ghost/api/admin/posts/" \
   -d '{
     "posts": [{
       "title": "Premium Content",
-      "html": "<p>Exclusive content</p>",
+      "lexical": "{\"root\":{\"children\":[{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Exclusive content\",\"type\":\"extended-text\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
       "visibility": "paid",
       "tiers": [
         {"id": "tier_id_here"}
@@ -233,52 +373,52 @@ curl -X POST "${GHOST_URL}/ghost/api/admin/pages/" \
   -d '{
     "pages": [{
       "title": "About Page",
-      "html": "<p>About content</p>",
+      "lexical": "{\"root\":{\"children\":[{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"About content\",\"type\":\"extended-text\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
       "status": "published"
     }]
   }'
 ```
 
-## Content Formatting
+## Helper: Building Lexical from Text
 
-Ghost accepts **HTML** in the `html` field. Common patterns:
+**Simple helper to convert plain text paragraphs to Lexical:**
 
-**Paragraphs:**
-```html
-<p>This is a paragraph.</p>
+```javascript
+function textToLexical(text) {
+  const paragraphs = text.split('\n\n').filter(p => p.trim());
+  
+  const children = paragraphs.map(para => ({
+    children: [{
+      detail: 0,
+      format: 0,
+      mode: "normal",
+      style: "",
+      text: para.trim(),
+      type: "extended-text",
+      version: 1
+    }],
+    direction: "ltr",
+    format: "",
+    indent: 0,
+    type: "paragraph",
+    version: 1
+  }));
+  
+  return JSON.stringify({
+    root: {
+      children,
+      direction: "ltr",
+      format: "",
+      indent: 0,
+      type: "root",
+      version: 1
+    }
+  });
+}
+
+// Usage:
+const lexicalContent = textToLexical("First paragraph.\n\nSecond paragraph.");
 ```
-
-**Headings:**
-```html
-<h2>Heading 2</h2>
-<h3>Heading 3</h3>
-```
-
-**Lists:**
-```html
-<ul>
-  <li>Item 1</li>
-  <li>Item 2</li>
-</ul>
-```
-
-**Code blocks:**
-```html
-<pre><code class="language-python">
-def hello():
-    print("Hello!")
-</code></pre>
-```
-
-**Images:**
-```html
-<figure class="kg-card kg-image-card">
-  <img src="https://example.com/image.jpg" alt="Description">
-  <figcaption>Image caption</figcaption>
-</figure>
-```
-
-**Markdown alternative:** Ghost also supports `mobiledoc` format, but HTML is simpler for programmatic generation.
 
 ## Common Workflows
 
@@ -286,7 +426,7 @@ def hello():
 
 1. Content drafted collaboratively in Notion
 2. Export Notion page as HTML or Markdown
-3. Convert to Ghost HTML format if needed
+3. Convert to Lexical format
 4. POST to Ghost as draft
 5. Review in Ghost admin
 6. Publish or schedule
@@ -294,10 +434,11 @@ def hello():
 ### Weekly Series (Automated)
 
 1. Generate content based on weekly topics/discussions
-2. Set author to "Navi" (find author by email)
-3. Apply consistent tags (e.g., "Weekly Series")
-4. Schedule for consistent day/time (e.g., Monday 9am)
-5. POST with `status: scheduled`
+2. Convert to Lexical format
+3. Set author to "Navi" (find author by email)
+4. Apply consistent tags (e.g., "Weekly Series")
+5. Schedule for consistent day/time (e.g., Monday 9am)
+6. POST with `status: scheduled`
 
 ### Bulk Tag Update
 
@@ -308,9 +449,12 @@ def hello():
 
 ## Best Practices
 
+- **Use Lexical format** for all create/update operations (Ghost 5.0+)
 - **Always include `updated_at`** when updating posts (prevents conflicts)
 - **Use slugs for URLs** - Auto-generated from title, but can override
 - **Feature images** - Use HTTPS URLs, ideally on your domain or CDN
 - **SEO metadata** - Set `meta_title`, `meta_description`, `og_title`, `og_description`
 - **Tags are lowercase** - Ghost auto-lowercases tag names
 - **Test in draft first** - Create as draft, review in admin, then publish
+- **Read with `?formats=html`** - Get rendered HTML for display/reading
+- **Write with `lexical`** - Ghost converts internally to mobiledoc
