@@ -1,0 +1,29 @@
+{
+  "type": "call-to-action",
+  "version": 1,
+  "layout": "minimal",
+  "alignment": "left",
+  "textValue": null,
+  "showButton": true,
+  "showDividers": true,
+  "buttonText": "Learn more",
+  "buttonUrl": "",
+  "buttonColor": "#000000",
+  "buttonTextColor": "#ffffff",
+  "hasSponsorLabel": true,
+  "sponsorLabel": "<p><span style=\"white-space: pre-wrap;\">SPONSORED</span></p>",
+  "backgroundColor": "grey",
+  "linkColor": "text",
+  "imageUrl": "",
+  "imageWidth": null,
+  "imageHeight": null,
+  "visibility": {
+    "web": {
+      "nonMember": true,
+      "memberSegment": "status:free,status:-free"
+    },
+    "email": {
+      "memberSegment": "status:free,status:-free"
+    }
+  }
+}

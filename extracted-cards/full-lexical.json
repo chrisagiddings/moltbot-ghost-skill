@@ -1,0 +1,283 @@
+{
+  "root": {
+    "children": [
+      {
+        "type": "button",
+        "version": 1,
+        "buttonText": "Button",
+        "alignment": "center",
+        "buttonUrl": ""
+      },
+      {
+        "type": "toggle",
+        "version": 1,
+        "heading": "<span style=\"white-space: pre-wrap;\">Toggle</span>",
+        "content": "<p dir=\"ltr\"><span style=\"white-space: pre-wrap;\">Toggle content</span></p>"
+      },
+      {
+        "type": "video",
+        "version": 1,
+        "src": "",
+        "caption": "<p dir=\"ltr\"><span style=\"white-space: pre-wrap;\">This is a video object</span></p>",
+        "fileName": "",
+        "mimeType": "",
+        "width": null,
+        "height": null,
+        "duration": 0,
+        "thumbnailSrc": "",
+        "customThumbnailSrc": "",
+        "thumbnailWidth": null,
+        "thumbnailHeight": null,
+        "cardWidth": "regular",
+        "loop": false
+      },
+      {
+        "type": "audio",
+        "version": 1,
+        "duration": 4.440813,
+        "mimeType": "audio/mpeg",
+        "src": "https://www.chrisgiddings.net/content/media/2026/02/11L_Emma_OAW_Midday.mp3",
+        "title": "11L Emma OAW Midday",
+        "thumbnailSrc": ""
+      },
+      {
+        "type": "file",
+        "src": "https://www.chrisgiddings.net/content/files/2026/02/IMG_9647.png",
+        "fileTitle": "IMG_9647",
+        "fileCaption": "",
+        "fileName": "IMG_9647.png",
+        "fileSize": 1026700
+      },
+      {
+        "type": "image",
+        "version": 1,
+        "src": "https://media.tenor.com/NCRUevhz9jkAAAAC/tea-good.gif",
+        "width": 498,
+        "height": 280,
+        "title": "",
+        "alt": "",
+        "caption": "<span style=\"white-space: pre-wrap;\">This is a GIF</span>",
+        "cardWidth": "regular",
+        "href": ""
+      },
+      {
+        "type": "product",
+        "version": 1,
+        "productImageSrc": "",
+        "productImageWidth": null,
+        "productImageHeight": null,
+        "productTitle": "<span style=\"white-space: pre-wrap;\">Product A</span>",
+        "productDescription": "<p dir=\"ltr\"><span style=\"white-space: pre-wrap;\">Product copy</span></p>",
+        "productRatingEnabled": false,
+        "productStarRating": 5,
+        "productButtonEnabled": false,
+        "productButton": "",
+        "productUrl": ""
+      },
+      {
+        "type": "header",
+        "version": 2,
+        "size": "small",
+        "style": "dark",
+        "buttonEnabled": false,
+        "buttonUrl": "",
+        "buttonText": "",
+        "header": "<span style=\"white-space: pre-wrap;\">Header</span>",
+        "subheader": "<span style=\"white-space: pre-wrap;\">Subhead</span>",
+        "backgroundImageSrc": "",
+        "accentColor": "#15171A",
+        "alignment": "center",
+        "backgroundColor": "#000000",
+        "backgroundImageWidth": null,
+        "backgroundImageHeight": null,
+        "backgroundSize": "cover",
+        "textColor": "#FFFFFF",
+        "buttonColor": "#ffffff",
+        "buttonTextColor": "#000000",
+        "layout": "full",
+        "swapped": false
+      },
+      {
+        "type": "call-to-action",
+        "version": 1,
+        "layout": "minimal",
+        "alignment": "left",
+        "textValue": null,
+        "showButton": true,
+        "showDividers": true,
+        "buttonText": "Learn more",
+        "buttonUrl": "",
+        "buttonColor": "#000000",
+        "buttonTextColor": "#ffffff",
+        "hasSponsorLabel": true,
+        "sponsorLabel": "<p><span style=\"white-space: pre-wrap;\">SPONSORED</span></p>",
+        "backgroundColor": "grey",
+        "linkColor": "text",
+        "imageUrl": "",
+        "imageWidth": null,
+        "imageHeight": null,
+        "visibility": {
+          "web": {
+            "nonMember": true,
+            "memberSegment": "status:free,status:-free"
+          },
+          "email": {
+            "memberSegment": "status:free,status:-free"
+          }
+        }
+      },
+      {
+        "type": "paywall",
+        "version": 1
+      },
+      {
+        "children": [
+          {
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "Oh boy this content is Members only!",
+            "type": "extended-text",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "type": "paragraph",
+        "version": 1
+      },
+      {
+        "type": "embed",
+        "version": 1,
+        "url": "https://www.youtube.com/watch?v=xWPuCuGS9Bs",
+        "embedType": "video",
+        "html": "<iframe width=\"200\" height=\"113\" src=\"https://www.youtube.com/embed/xWPuCuGS9Bs?feature=oembed\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"How Desert Communities in Arizona Are Transforming Wastelands Into Food Oases With Simple Technology\"></iframe>",
+        "metadata": {
+          "title": "How Desert Communities in Arizona Are Transforming Wastelands Into Food Oases With Simple Technology",
+          "author_name": "Make Tech Future",
+          "author_url": "https://www.youtube.com/@MakeTechFuture",
+          "type": "video",
+          "height": 113,
+          "width": 200,
+          "version": "1.0",
+          "provider_name": "YouTube",
+          "provider_url": "https://www.youtube.com/",
+          "thumbnail_height": 360,
+          "thumbnail_width": 480,
+          "thumbnail_url": "https://i.ytimg.com/vi/xWPuCuGS9Bs/hqdefault.jpg",
+          "html": "<iframe width=\"200\" height=\"113\" src=\"https://www.youtube.com/embed/xWPuCuGS9Bs?feature=oembed\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"How Desert Communities in Arizona Are Transforming Wastelands Into Food Oases With Simple Technology\"></iframe>"
+        },
+        "caption": ""
+      },
+      {
+        "type": "embed",
+        "version": 1,
+        "url": "https://open.spotify.com/playlist/3Quzho86Fpss9m4G92vYzR?si=4c7dbcb74c4f48e9",
+        "embedType": "rich",
+        "html": "<iframe style=\"border-radius: 12px\" width=\"100%\" height=\"352\" title=\"Spotify Embed: Mr. Giddy&apos;s AI Replacement\" frameborder=\"0\" allowfullscreen allow=\"autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture\" loading=\"lazy\" src=\"https://open.spotify.com/embed/playlist/3Quzho86Fpss9m4G92vYzR?si=4c7dbcb74c4f48e9&amp;utm_source=oembed\"></iframe>",
+        "metadata": {
+          "html": "<iframe style=\"border-radius: 12px\" width=\"100%\" height=\"352\" title=\"Spotify Embed: Mr. Giddy&apos;s AI Replacement\" frameborder=\"0\" allowfullscreen allow=\"autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture\" loading=\"lazy\" src=\"https://open.spotify.com/embed/playlist/3Quzho86Fpss9m4G92vYzR?si=4c7dbcb74c4f48e9&amp;utm_source=oembed\"></iframe>",
+          "iframe_url": "https://open.spotify.com/embed/playlist/3Quzho86Fpss9m4G92vYzR?si=4c7dbcb74c4f48e9&utm_source=oembed",
+          "width": 456,
+          "height": 352,
+          "version": "1.0",
+          "provider_name": "Spotify",
+          "provider_url": "https://spotify.com",
+          "type": "rich",
+          "title": "Mr. Giddy's AI Replacement",
+          "thumbnail_url": "https://image-cdn-ak.spotifycdn.com/image/ab67706c0000da849e13bd07cb494ec34635398d",
+          "thumbnail_width": 300,
+          "thumbnail_height": 300
+        },
+        "caption": ""
+      },
+      {
+        "type": "embed",
+        "version": 1,
+        "url": "https://twitter.com/SproutSocial/status/1544347965061570560",
+        "embedType": "twitter",
+        "html": "<blockquote class=\"twitter-tweet\"><p lang=\"en\" dir=\"ltr\">Exceed your customers’ expectations and deliver responsive, tailored experiences on their communication channel of choice: social media. <a href=\"https://t.co/y7Ye7WYdK0\">pic.twitter.com/y7Ye7WYdK0</a></p>&mdash; Sprout Social (@SproutSocial) <a href=\"https://twitter.com/SproutSocial/status/1544347965061570560?ref_src=twsrc%5Etfw\">July 5, 2022</a></blockquote>\n<script async src=\"https://platform.twitter.com/widgets.js\" charset=\"utf-8\"></script>\n\n",
+        "metadata": {
+          "url": "https://twitter.com/SproutSocial/status/1544347965061570560",
+          "author_name": "Sprout Social",
+          "author_url": "https://twitter.com/SproutSocial",
+          "html": "<blockquote class=\"twitter-tweet\"><p lang=\"en\" dir=\"ltr\">Exceed your customers’ expectations and deliver responsive, tailored experiences on their communication channel of choice: social media. <a href=\"https://t.co/y7Ye7WYdK0\">pic.twitter.com/y7Ye7WYdK0</a></p>&mdash; Sprout Social (@SproutSocial) <a href=\"https://twitter.com/SproutSocial/status/1544347965061570560?ref_src=twsrc%5Etfw\">July 5, 2022</a></blockquote>\n<script async src=\"https://platform.twitter.com/widgets.js\" charset=\"utf-8\"></script>\n\n",
+          "width": 550,
+          "height": null,
+          "type": "twitter",
+          "cache_age": "3153600000",
+          "provider_name": "Twitter",
+          "provider_url": "https://twitter.com",
+          "version": "1.0"
+        },
+        "caption": ""
+      },
+      {
+        "children": [
+          {
+            "detail": 0,
+            "format": 0,
+            "mode": "normal",
+            "style": "",
+            "text": "The following is a Snippet saved in Ghost",
+            "type": "extended-text",
+            "version": 1
+          }
+        ],
+        "direction": "ltr",
+        "format": "",
+        "indent": 0,
+        "type": "paragraph",
+        "version": 1
+      },
+      {
+        "type": "bookmark",
+        "version": 1,
+        "url": "https://www.twitch.tv/chrisagiddings",
+        "metadata": {
+          "icon": "https://static.twitchcdn.net/assets/favicon-32-e29e246c157142c94346.png",
+          "title": "chrisagiddings - Twitch",
+          "description": "I’m a lifelong gamer who enjoys variety and challenge in what I play. Watch me lose repeatedly, blow stuff up, struggle with puzzles and conquer the world! You’ll either be entertained or bored. Guaranteed.",
+          "author": "",
+          "publisher": "Twitch",
+          "thumbnail": "https://static-cdn.jtvnw.net/jtv_user_pictures/a2882b96-609f-4963-919e-758fb9e46499-profile_image-300x300.png"
+        },
+        "caption": "<p><span style=\"white-space: pre-wrap;\">If you're not following me on Twitch yet, get to it!</span></p>"
+      },
+      {
+        "type": "markdown",
+        "version": 1,
+        "markdown": "## This is Markdown"
+      },
+      {
+        "type": "html",
+        "version": 1,
+        "html": "<html><h1>Hello World</lh1></html>",
+        "visibility": {
+          "web": {
+            "nonMember": true,
+            "memberSegment": "status:free,status:-free"
+          },
+          "email": {
+            "memberSegment": "status:free,status:-free"
+          }
+        }
+      },
+      {
+        "children": [],
+        "direction": null,
+        "format": "",
+        "indent": 0,
+        "type": "paragraph",
+        "version": 1
+      }
+    ],
+    "direction": "ltr",
+    "format": "",
+    "indent": 0,
+    "type": "root",
+    "version": 1
+  }
+}

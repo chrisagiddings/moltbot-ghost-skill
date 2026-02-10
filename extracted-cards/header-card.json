@@ -1,0 +1,23 @@
+{
+  "type": "header",
+  "version": 2,
+  "size": "small",
+  "style": "dark",
+  "buttonEnabled": false,
+  "buttonUrl": "",
+  "buttonText": "",
+  "header": "<span style=\"white-space: pre-wrap;\">Header</span>",
+  "subheader": "<span style=\"white-space: pre-wrap;\">Subhead</span>",
+  "backgroundImageSrc": "",
+  "accentColor": "#15171A",
+  "alignment": "center",
+  "backgroundColor": "#000000",
+  "backgroundImageWidth": null,
+  "backgroundImageHeight": null,
+  "backgroundSize": "cover",
+  "textColor": "#FFFFFF",
+  "buttonColor": "#ffffff",
+  "buttonTextColor": "#000000",
+  "layout": "full",
+  "swapped": false
+}

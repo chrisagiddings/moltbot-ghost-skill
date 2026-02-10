@@ -1,0 +1,6 @@
+{
+  "type": "toggle",
+  "version": 1,
+  "heading": "<span style=\"white-space: pre-wrap;\">Toggle</span>",
+  "content": "<p dir=\"ltr\"><span style=\"white-space: pre-wrap;\">Toggle content</span></p>"
+}

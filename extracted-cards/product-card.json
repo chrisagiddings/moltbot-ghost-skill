@@ -1,0 +1,14 @@
+{
+  "type": "product",
+  "version": 1,
+  "productImageSrc": "",
+  "productImageWidth": null,
+  "productImageHeight": null,
+  "productTitle": "<span style=\"white-space: pre-wrap;\">Product A</span>",
+  "productDescription": "<p dir=\"ltr\"><span style=\"white-space: pre-wrap;\">Product copy</span></p>",
+  "productRatingEnabled": false,
+  "productStarRating": 5,
+  "productButtonEnabled": false,
+  "productButton": "",
+  "productUrl": ""
+}

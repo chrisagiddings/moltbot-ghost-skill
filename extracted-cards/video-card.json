@@ -1,0 +1,17 @@
+{
+  "type": "video",
+  "version": 1,
+  "src": "",
+  "caption": "<p dir=\"ltr\"><span style=\"white-space: pre-wrap;\">This is a video object</span></p>",
+  "fileName": "",
+  "mimeType": "",
+  "width": null,
+  "height": null,
+  "duration": 0,
+  "thumbnailSrc": "",
+  "customThumbnailSrc": "",
+  "thumbnailWidth": null,
+  "thumbnailHeight": null,
+  "cardWidth": "regular",
+  "loop": false
+}

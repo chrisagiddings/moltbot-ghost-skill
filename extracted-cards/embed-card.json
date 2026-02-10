@@ -1,0 +1,66 @@
+{
+  "type": "embed",
+  "version": 1,
+  "url": "https://www.youtube.com/watch?v=xWPuCuGS9Bs",
+  "embedType": "video",
+  "html": "<iframe width=\"200\" height=\"113\" src=\"https://www.youtube.com/embed/xWPuCuGS9Bs?feature=oembed\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"How Desert Communities in Arizona Are Transforming Wastelands Into Food Oases With Simple Technology\"></iframe>",
+  "metadata": {
+    "title": "How Desert Communities in Arizona Are Transforming Wastelands Into Food Oases With Simple Technology",
+    "author_name": "Make Tech Future",
+    "author_url": "https://www.youtube.com/@MakeTechFuture",
+    "type": "video",
+    "height": 113,
+    "width": 200,
+    "version": "1.0",
+    "provider_name": "YouTube",
+    "provider_url": "https://www.youtube.com/",
+    "thumbnail_height": 360,
+    "thumbnail_width": 480,
+    "thumbnail_url": "https://i.ytimg.com/vi/xWPuCuGS9Bs/hqdefault.jpg",
+    "html": "<iframe width=\"200\" height=\"113\" src=\"https://www.youtube.com/embed/xWPuCuGS9Bs?feature=oembed\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"How Desert Communities in Arizona Are Transforming Wastelands Into Food Oases With Simple Technology\"></iframe>"
+  },
+  "caption": ""
+}
+{
+  "type": "embed",
+  "version": 1,
+  "url": "https://open.spotify.com/playlist/3Quzho86Fpss9m4G92vYzR?si=4c7dbcb74c4f48e9",
+  "embedType": "rich",
+  "html": "<iframe style=\"border-radius: 12px\" width=\"100%\" height=\"352\" title=\"Spotify Embed: Mr. Giddy&apos;s AI Replacement\" frameborder=\"0\" allowfullscreen allow=\"autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture\" loading=\"lazy\" src=\"https://open.spotify.com/embed/playlist/3Quzho86Fpss9m4G92vYzR?si=4c7dbcb74c4f48e9&amp;utm_source=oembed\"></iframe>",
+  "metadata": {
+    "html": "<iframe style=\"border-radius: 12px\" width=\"100%\" height=\"352\" title=\"Spotify Embed: Mr. Giddy&apos;s AI Replacement\" frameborder=\"0\" allowfullscreen allow=\"autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture\" loading=\"lazy\" src=\"https://open.spotify.com/embed/playlist/3Quzho86Fpss9m4G92vYzR?si=4c7dbcb74c4f48e9&amp;utm_source=oembed\"></iframe>",
+    "iframe_url": "https://open.spotify.com/embed/playlist/3Quzho86Fpss9m4G92vYzR?si=4c7dbcb74c4f48e9&utm_source=oembed",
+    "width": 456,
+    "height": 352,
+    "version": "1.0",
+    "provider_name": "Spotify",
+    "provider_url": "https://spotify.com",
+    "type": "rich",
+    "title": "Mr. Giddy's AI Replacement",
+    "thumbnail_url": "https://image-cdn-ak.spotifycdn.com/image/ab67706c0000da849e13bd07cb494ec34635398d",
+    "thumbnail_width": 300,
+    "thumbnail_height": 300
+  },
+  "caption": ""
+}
+{
+  "type": "embed",
+  "version": 1,
+  "url": "https://twitter.com/SproutSocial/status/1544347965061570560",
+  "embedType": "twitter",
+  "html": "<blockquote class=\"twitter-tweet\"><p lang=\"en\" dir=\"ltr\">Exceed your customers’ expectations and deliver responsive, tailored experiences on their communication channel of choice: social media. <a href=\"https://t.co/y7Ye7WYdK0\">pic.twitter.com/y7Ye7WYdK0</a></p>&mdash; Sprout Social (@SproutSocial) <a href=\"https://twitter.com/SproutSocial/status/1544347965061570560?ref_src=twsrc%5Etfw\">July 5, 2022</a></blockquote>\n<script async src=\"https://platform.twitter.com/widgets.js\" charset=\"utf-8\"></script>\n\n",
+  "metadata": {
+    "url": "https://twitter.com/SproutSocial/status/1544347965061570560",
+    "author_name": "Sprout Social",
+    "author_url": "https://twitter.com/SproutSocial",
+    "html": "<blockquote class=\"twitter-tweet\"><p lang=\"en\" dir=\"ltr\">Exceed your customers’ expectations and deliver responsive, tailored experiences on their communication channel of choice: social media. <a href=\"https://t.co/y7Ye7WYdK0\">pic.twitter.com/y7Ye7WYdK0</a></p>&mdash; Sprout Social (@SproutSocial) <a href=\"https://twitter.com/SproutSocial/status/1544347965061570560?ref_src=twsrc%5Etfw\">July 5, 2022</a></blockquote>\n<script async src=\"https://platform.twitter.com/widgets.js\" charset=\"utf-8\"></script>\n\n",
+    "width": 550,
+    "height": null,
+    "type": "twitter",
+    "cache_age": "3153600000",
+    "provider_name": "Twitter",
+    "provider_url": "https://twitter.com",
+    "version": "1.0"
+  },
+  "caption": ""
+}

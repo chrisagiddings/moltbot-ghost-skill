@@ -1,0 +1,14 @@
+{
+  "type": "html",
+  "version": 1,
+  "html": "<html><h1>Hello World</lh1></html>",
+  "visibility": {
+    "web": {
+      "nonMember": true,
+      "memberSegment": "status:free,status:-free"
+    },
+    "email": {
+      "memberSegment": "status:free,status:-free"
+    }
+  }
+}

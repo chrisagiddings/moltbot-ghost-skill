@@ -314,22 +314,479 @@ Snippets cannot be accessed or inserted via the Admin API with integration token
 
 See issue #13 for planned snippet support.
 
-## Additional Card Types (Unverified)
+## Interactive Content Cards
 
-These card types are known to exist in Ghost's editor but haven't been confirmed to work via API:
+### Button Card
+```json
+{
+  "type": "button",
+  "version": 1,
+  "buttonText": "Click Here",
+  "alignment": "center",
+  "buttonUrl": "https://example.com"
+}
+```
 
-- **Button card** - Call-to-action buttons
-- **Toggle/Accordion** - Collapsible content
-- **Audio card** - Audio embeds
-- **Video card** - Video embeds  
-- **File card** - Downloadable files
-- **Product card** - E-commerce products
-- **Email CTA** - Member-only call-to-action
-- **Embed card** - Third-party embeds (YouTube, Twitter, etc.)
+**Fields:**
+- `buttonText` (string, required) - Button label
+- `buttonUrl` (string, required) - Link destination
+- `alignment` (string, optional) - "left" or "center" (default: "center")
 
-If you encounter or test these card types, please document their Lexical structure and submit a PR.
+**Usage:**
+```javascript
+// Simple button
+{
+  type: "button",
+  version: 1,
+  buttonText: "Subscribe Now",
+  buttonUrl: "/subscribe",
+  alignment: "center"
+}
+```
 
-## Tips & Best Practices
+### Toggle Card
+```json
+{
+  "type": "toggle",
+  "version": 1,
+  "heading": "<span style=\"white-space: pre-wrap;\">Click to expand</span>",
+  "content": "<p dir=\"ltr\"><span style=\"white-space: pre-wrap;\">Hidden content here</span></p>"
+}
+```
+
+**Fields:**
+- `heading` (HTML string, required) - Toggle header/title
+- `content` (HTML string, required) - Collapsible content
+
+**Usage:**
+```javascript
+// FAQ toggle
+{
+  type: "toggle",
+  version: 1,
+  heading: "<span style=\"white-space: pre-wrap;\">How do I cancel?</span>",
+  content: "<p dir=\"ltr\"><span style=\"white-space: pre-wrap;\">Visit your account settings...</span></p>"
+}
+```
+
+## Media Upload Cards
+
+### Video Card
+```json
+{
+  "type": "video",
+  "version": 1,
+  "src": "https://example.com/video.mp4",
+  "caption": "<p dir=\"ltr\"><span style=\"white-space: pre-wrap;\">Video caption</span></p>",
+  "fileName": "video.mp4",
+  "mimeType": "video/mp4",
+  "width": 1920,
+  "height": 1080,
+  "duration": 120.5,
+  "thumbnailSrc": "https://example.com/thumb.jpg",
+  "customThumbnailSrc": "",
+  "thumbnailWidth": 1920,
+  "thumbnailHeight": 1080,
+  "cardWidth": "regular",
+  "loop": false
+}
+```
+
+**Fields:**
+- `src` (string, required) - Video file URL
+- `caption` (HTML string, optional) - Video caption
+- `fileName` (string, optional) - Original filename
+- `mimeType` (string, optional) - video/mp4, video/webm, video/ogg
+- `width`/`height` (number, optional) - Video dimensions
+- `duration` (number, optional) - Duration in seconds
+- `thumbnailSrc` (string, optional) - Auto-generated thumbnail
+- `customThumbnailSrc` (string, optional) - Custom thumbnail URL
+- `cardWidth` (string, optional) - "regular", "wide", or "full"
+- `loop` (boolean, optional) - Loop video playback
+
+**Supported Formats:** .mp4, .webm, .ogg  
+**Max File Size:** 1GB (Ghost Pro plan-dependent)
+
+### Audio Card
+```json
+{
+  "type": "audio",
+  "version": 1,
+  "duration": 180.5,
+  "mimeType": "audio/mpeg",
+  "src": "https://example.com/audio.mp3",
+  "title": "Podcast Episode 1",
+  "thumbnailSrc": "https://example.com/cover.jpg"
+}
+```
+
+**Fields:**
+- `src` (string, required) - Audio file URL
+- `title` (string, optional) - Audio title/name
+- `duration` (number, optional) - Duration in seconds
+- `mimeType` (string, optional) - audio/mpeg, audio/wav, audio/ogg
+- `thumbnailSrc` (string, optional) - Cover art/thumbnail
+
+**Supported Formats:** .mp3, .wav, .ogg  
+**Max File Size:** 1GB (Ghost Pro plan-dependent)
+
+### File Card
+```json
+{
+  "type": "file",
+  "src": "https://example.com/document.pdf",
+  "fileTitle": "Download Guide",
+  "fileCaption": "User manual and setup instructions",
+  "fileName": "guide.pdf",
+  "fileSize": 1024000
+}
+```
+
+**Fields:**
+- `src` (string, required) - File URL
+- `fileTitle` (string, optional) - Display title
+- `fileCaption` (string, optional) - File description
+- `fileName` (string, optional) - Original filename
+- `fileSize` (number, optional) - Size in bytes
+
+**Supported Formats:** Any file type  
+**Max File Size:** 1GB (Ghost Pro plan-dependent)
+
+**Usage Examples:**
+- Downloadable PDFs, ebooks
+- Templates and swipe files
+- Bonus content for paid members
+
+## Advanced Content Cards
+
+### Product Card
+```json
+{
+  "type": "product",
+  "version": 1,
+  "productImageSrc": "https://example.com/product.jpg",
+  "productImageWidth": 400,
+  "productImageHeight": 400,
+  "productTitle": "<span style=\"white-space: pre-wrap;\">Product Name</span>",
+  "productDescription": "<p dir=\"ltr\"><span style=\"white-space: pre-wrap;\">Product description here</span></p>",
+  "productRatingEnabled": true,
+  "productStarRating": 4,
+  "productButtonEnabled": true,
+  "productButton": "Buy Now",
+  "productUrl": "https://example.com/buy"
+}
+```
+
+**Fields:**
+- `productImageSrc` (string, optional) - Product image URL
+- `productImageWidth`/`Height` (number, optional) - Image dimensions
+- `productTitle` (HTML string, required) - Product name
+- `productDescription` (HTML string, optional) - Product details
+- `productRatingEnabled` (boolean, optional) - Show star rating
+- `productStarRating` (number, optional) - 1-5 stars
+- `productButtonEnabled` (boolean, optional) - Show buy button
+- `productButton` (string, optional) - Button text
+- `productUrl` (string, optional) - Purchase link
+
+### Header Card
+```json
+{
+  "type": "header",
+  "version": 2,
+  "size": "small",
+  "style": "dark",
+  "buttonEnabled": true,
+  "buttonUrl": "https://example.com",
+  "buttonText": "Learn More",
+  "header": "<span style=\"white-space: pre-wrap;\">Section Title</span>",
+  "subheader": "<span style=\"white-space: pre-wrap;\">Subtitle text</span>",
+  "backgroundImageSrc": "https://example.com/bg.jpg",
+  "accentColor": "#15171A",
+  "alignment": "center",
+  "backgroundColor": "#000000",
+  "backgroundImageWidth": 1920,
+  "backgroundImageHeight": 1080,
+  "backgroundSize": "cover",
+  "textColor": "#FFFFFF",
+  "buttonColor": "#ffffff",
+  "buttonTextColor": "#000000",
+  "layout": "full",
+  "swapped": false
+}
+```
+
+**Fields:**
+- `size` (string, optional) - "small", "medium", "large"
+- `style` (string, optional) - "dark", "light", "accent"
+- `buttonEnabled` (boolean, optional) - Show button
+- `buttonUrl`/`buttonText` (string, optional) - Button config
+- `header` (HTML string, required) - Main heading
+- `subheader` (HTML string, optional) - Subtitle
+- `backgroundImageSrc` (string, optional) - Background image
+- `backgroundColor` (hex, optional) - Background color
+- `textColor` (hex, optional) - Text color
+- `buttonColor`/`buttonTextColor` (hex, optional) - Button colors
+- `layout` (string, optional) - "wide", "full", "split"
+- `alignment` (string, optional) - "left", "center"
+- `swapped` (boolean, optional) - Reverse layout
+
+**Use Cases:**
+- Section dividers
+- Landing page headers
+- Feature highlights
+
+### Call-to-Action Card
+```json
+{
+  "type": "call-to-action",
+  "version": 1,
+  "layout": "minimal",
+  "alignment": "left",
+  "textValue": null,
+  "showButton": true,
+  "showDividers": true,
+  "buttonText": "Learn more",
+  "buttonUrl": "https://example.com",
+  "buttonColor": "#000000",
+  "buttonTextColor": "#ffffff",
+  "hasSponsorLabel": true,
+  "sponsorLabel": "<p><span style=\"white-space: pre-wrap;\">SPONSORED</span></p>",
+  "backgroundColor": "grey",
+  "linkColor": "text",
+  "imageUrl": "https://example.com/image.jpg",
+  "imageWidth": 600,
+  "imageHeight": 400,
+  "visibility": {
+    "web": {
+      "nonMember": true,
+      "memberSegment": "status:free,status:-free"
+    },
+    "email": {
+      "memberSegment": "status:free,status:-free"
+    }
+  }
+}
+```
+
+**Fields:**
+- `layout` (string, optional) - "minimal", "default"
+- `alignment` (string, optional) - "left", "center"
+- `showButton` (boolean, optional) - Display button
+- `showDividers` (boolean, optional) - Show divider lines
+- `buttonText`/`buttonUrl` (string, optional) - Button config
+- `buttonColor`/`buttonTextColor` (hex, optional) - Button styling
+- `hasSponsorLabel` (boolean, optional) - Show sponsor tag
+- `sponsorLabel` (HTML string, optional) - Sponsor text
+- `backgroundColor` (string, optional) - "grey", "white", or hex
+- `linkColor` (string, optional) - "text", "accent", or hex
+- `imageUrl` (string, optional) - CTA image
+- `visibility` (object, optional) - Member visibility rules
+
+**Member Visibility:**
+- Target by membership status (free, paid)
+- Show/hide in web vs. email
+- Segment filtering capabilities
+
+## Developer Content Cards
+
+### HTML Card
+```json
+{
+  "type": "html",
+  "version": 1,
+  "html": "<div class=\"custom-widget\">Custom HTML here</div>",
+  "visibility": {
+    "web": {
+      "nonMember": true,
+      "memberSegment": "status:free,status:-free"
+    },
+    "email": {
+      "memberSegment": "status:free,status:-free"
+    }
+  }
+}
+```
+
+**Fields:**
+- `html` (string, required) - Custom HTML content
+- `visibility` (object, optional) - Member visibility settings
+
+**Use Cases:**
+- Custom forms and widgets
+- Third-party integrations
+- Custom styling and layouts
+- Embedded tools
+
+**Note:** Already documented as "HTML" card in original documentation, confirmed structure.
+
+### Paywall Card
+```json
+{
+  "type": "paywall",
+  "version": 1
+}
+```
+
+**Purpose:** Public preview divider  
+**Fields:** None - just marks the paywall position
+
+**Behavior:**
+- Content above is visible to all
+- Content below requires paid membership
+- Only one paywall per post
+
+## Third-Party Embeds
+
+### Embed Card (General Structure)
+```json
+{
+  "type": "embed",
+  "version": 1,
+  "url": "https://example.com/embed",
+  "embedType": "video",
+  "html": "<iframe>...</iframe>",
+  "metadata": {
+    "title": "Embed Title",
+    "type": "video",
+    "provider_name": "Provider",
+    ...
+  },
+  "caption": ""
+}
+```
+
+**Fields:**
+- `url` (string, required) - Original URL
+- `embedType` (string, auto) - "video", "rich", "twitter", etc.
+- `html` (string, auto) - oEmbed HTML
+- `metadata` (object, auto) - oEmbed metadata
+- `caption` (string, optional) - Caption text
+
+**Supported Embed Types:**
+
+#### YouTube Embed
+```json
+{
+  "type": "embed",
+  "version": 1,
+  "url": "https://www.youtube.com/watch?v=VIDEO_ID",
+  "embedType": "video",
+  "html": "<iframe ...></iframe>",
+  "metadata": {
+    "title": "Video Title",
+    "author_name": "Channel Name",
+    "author_url": "https://www.youtube.com/@channel",
+    "type": "video",
+    "provider_name": "YouTube",
+    "thumbnail_url": "https://i.ytimg.com/...",
+    "thumbnail_width": 480,
+    "thumbnail_height": 360
+  },
+  "caption": ""
+}
+```
+
+#### Spotify Embed
+```json
+{
+  "type": "embed",
+  "version": 1,
+  "url": "https://open.spotify.com/playlist/PLAYLIST_ID",
+  "embedType": "rich",
+  "html": "<iframe ...></iframe>",
+  "metadata": {
+    "html": "<iframe ...></iframe>",
+    "iframe_url": "https://open.spotify.com/embed/...",
+    "type": "rich",
+    "provider_name": "Spotify",
+    "title": "Playlist Name",
+    "thumbnail_url": "https://image-cdn-ak.spotifycdn.com/...",
+    "width": 456,
+    "height": 352
+  },
+  "caption": ""
+}
+```
+
+#### Twitter/X Embed
+```json
+{
+  "type": "embed",
+  "version": 1,
+  "url": "https://twitter.com/username/status/STATUS_ID",
+  "embedType": "twitter",
+  "html": "<blockquote class=\"twitter-tweet\">...</blockquote>\n<script ...></script>",
+  "metadata": {
+    "url": "https://twitter.com/...",
+    "author_name": "Author Name",
+    "author_url": "https://twitter.com/username",
+    "type": "twitter",
+    "provider_name": "Twitter",
+    "cache_age": "3153600000"
+  },
+  "caption": ""
+}
+```
+
+**How Embeds Work:**
+1. User pastes URL in Ghost editor
+2. Ghost fetches oEmbed data from provider
+3. Metadata and HTML stored in embed card
+4. Rendered via metadata HTML
+
+**Supported Providers:**
+- YouTube
+- Spotify
+- Twitter/X
+- Instagram
+- TikTok
+- Vimeo
+- SoundCloud
+- CodePen
+- Many more via oEmbed
+
+**Note:** Embed HTML is automatically generated by Ghost from the URL. When creating via API, you can provide minimal structure and Ghost will fetch metadata, or provide complete oEmbed data.
+
+## Updated Card Type Index
+
+### Verified & Documented (23 Card Types)
+
+**Text Content:**
+- Paragraph
+- Heading (h1-h6)
+- Markdown
+
+**Media:**
+- Image
+- Gallery
+- Bookmark
+- Video ✨ NEW
+- Audio ✨ NEW
+- File ✨ NEW
+
+**Layout:**
+- Callout
+- Horizontal Rule
+- Header ✨ NEW
+
+**Interactive:**
+- Button ✨ NEW
+- Toggle ✨ NEW
+- Signup
+
+**Marketing:**
+- Call-to-Action ✨ NEW
+- Product ✨ NEW
+
+**Member Content:**
+- Paywall ✨ NEW
+- HTML (with visibility)
+
+**Embeds:**
+- Embed (YouTube, Spotify, Twitter, and many more) ✨ NEW
+
+**Total:** 23 documented card types (10 newly added!)
+
 
 1. **Callouts for key information** - Use callouts to highlight important notes, warnings, or tips
 2. **Galleries for multiple images** - More efficient than multiple image cards
