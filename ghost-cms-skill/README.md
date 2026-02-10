@@ -327,21 +327,56 @@ node ghost-crud.js list posts --limit 1
 
 See [references/setup.md](references/setup.md) for complete troubleshooting guide.
 
+## Lexical Card Support
+
+**23 card types fully documented** with helper functions:
+
+**Text Content:**
+- Paragraph, Heading (h1-h6), Markdown
+
+**Media:**
+- Image, Gallery, Bookmark
+- ✨ **Video** - MP4, WebM, OGG embeds
+- ✨ **Audio** - MP3, WAV, OGG embeds
+- ✨ **File** - Downloadable files (any type)
+
+**Layout:**
+- Callout, Divider
+- ✨ **Header** - Section headers with images/layouts
+
+**Interactive:**
+- ✨ **Button** - Call-to-action buttons
+- ✨ **Toggle** - Collapsible content
+- Signup forms
+
+**Marketing:**
+- ✨ **Call-to-Action** - Promotional content with visibility
+- ✨ **Product** - E-commerce product displays
+
+**Member Content:**
+- ✨ **Paywall** - Public preview divider
+- ✨ **HTML** - Custom HTML with visibility
+
+**Embeds:**
+- ✨ **Embed** - YouTube, Spotify, Twitter, and more via oEmbed
+
+See [lexical-cards.md](references/lexical-cards.md) for complete documentation and [lexical-builder.js](scripts/lexical-builder.js) for helper functions.
+
 ## Future Enhancements
 
 This skill provides complete core functionality for Ghost CMS management. See [open issues](https://github.com/chrisagiddings/moltbot-ghost-skill/issues) for planned enhancements:
 
 **Planned for future releases:**
-- Advanced Lexical card types (buttons, audio, video)
 - Theme management and switching
 - Multi-blog support (manage multiple Ghost instances)
 - Navigation configuration
 - Automation workflows and webhooks
 - AI-powered image generation
-- Content snippets and reusable blocks
+- Content snippets via API (Ghost limitation)
 
 **Current version (v0.1.0) provides:**
 - ✅ Complete content management (posts, pages, tags)
+- ✅ **23 Lexical card types documented** (expanded!)
 - ✅ Full member and subscription management
 - ✅ Comment moderation
 - ✅ Newsletter management
