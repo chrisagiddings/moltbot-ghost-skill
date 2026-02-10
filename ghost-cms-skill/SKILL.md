@@ -1,6 +1,7 @@
 ---
 name: ghost-cms-skill
 description: Comprehensive Ghost CMS integration for creating, publishing, scheduling, and managing blog content, newsletters, members, and analytics. Use when working with Ghost blogs for content creation (drafts, publishing, scheduling), member/subscriber management (tiers, newsletters), comment moderation, or analytics (popular posts, subscriber growth). Supports all Ghost Admin API operations.
+metadata: {"openclaw":{"disable-model-invocation":true}}
 ---
 
 # Ghost CMS
