@@ -1,12 +1,54 @@
 ---
 name: ghost-cms-skill
 description: Comprehensive Ghost CMS integration for creating, publishing, scheduling, and managing blog content, newsletters, members, and analytics. Use when working with Ghost blogs for content creation (drafts, publishing, scheduling), member/subscriber management (tiers, newsletters), comment moderation, or analytics (popular posts, subscriber growth). Supports all Ghost Admin API operations.
-metadata: {"openclaw":{"disable-model-invocation":true}}
+metadata: {"openclaw":{"disable-model-invocation":true,"requires":{"bins":["node","npm"]},"credentials":{"types":[{"type":"file","locations":["~/.config/ghost/api_key","~/.config/ghost/api_url"],"description":"Ghost Admin API credentials"},{"type":"env","variables":[{"name":"GHOST_ADMIN_KEY","description":"Ghost Admin API key (JWT)","required":true},{"name":"GHOST_API_URL","description":"Ghost site URL (e.g., https://yourblog.ghost.io)","required":true}]}]}}}
 ---
 
 # Ghost CMS
 
 Manage Ghost blog content, members, analytics, and newsletters through the Ghost Admin API.
+
+## ⚠️ Security Warning
+
+**Ghost Admin API keys provide FULL access to your Ghost site:**
+
+- **Content Management:** Create, update, delete, publish posts and pages
+- **Member Management:** Add, modify, delete members and subscriptions
+- **Subscription Management:** Create, modify, delete membership tiers
+- **Comment Management:** Reply to, approve, delete comments
+- **User Management:** Invite, modify, delete users
+- **Media Management:** Upload images and files (affects storage)
+- **Site Configuration:** Modify newsletters and settings
+
+**Published content is IMMEDIATELY PUBLIC** - be extra careful with publish operations.
+
+**Security Best Practices:**
+- **Store API keys securely** - Use 1Password CLI or secure env vars
+- **Review before publishing** - Always check content before making it public
+- **Never commit keys** - Keep credentials out of version control
+- **Rotate keys regularly** - Create new integrations every 90 days
+- **Use dedicated integrations** - Separate keys for different use cases
+- **Test on staging first** - Use a test Ghost site when possible
+
+**Admin API Key Scope:**
+Ghost Admin API keys have **no scoping options** - they provide full access to everything. There are no read-only keys.
+
+**Operation Types:**
+
+**Read-Only Operations** (✅ Safe):
+- List posts, pages, tags, members, tiers, newsletters, comments
+- Get analytics and member stats
+- All GET requests
+
+**Destructive Operations** (⚠️ Modify or delete data, may be public):
+- Create/update/delete posts, pages, tags (POST, PUT, DELETE)
+- Publish/unpublish/schedule posts (**makes content public**)
+- Create/update/delete members, tiers, newsletters
+- Create replies, approve/delete comments
+- Upload images (uses storage quota)
+- All POST, PUT, DELETE requests
+
+For detailed operation documentation, see [api-reference.md](references/api-reference.md).
 
 ## Quick Setup
 
@@ -15,18 +57,44 @@ Manage Ghost blog content, members, analytics, and newsletters through the Ghost
    - Create a new "Custom Integration"
    - Copy the **Admin API Key** and **API URL**
 
-2. **Store credentials:**
+2. **Store credentials securely:**
+
+   **Option A: Environment Variables (Recommended)**
+   ```bash
+   # Add to your shell profile (~/.zshrc, ~/.bashrc)
+   export GHOST_ADMIN_KEY="YOUR_ADMIN_API_KEY"
+   export GHOST_API_URL="https://yourblog.ghost.io"
+   ```
+
+   **Option B: Config Files**
    ```bash
    mkdir -p ~/.config/ghost
    echo "YOUR_ADMIN_API_KEY" > ~/.config/ghost/api_key
    echo "https://yourblog.ghost.io" > ~/.config/ghost/api_url
+   
+   # Secure the files (owner read-only)
+   chmod 600 ~/.config/ghost/api_key
+   chmod 600 ~/.config/ghost/api_url
    ```
 
-   Or set environment variables:
+   **Option C: 1Password CLI (Most Secure)**
    ```bash
-   export GHOST_ADMIN_KEY="YOUR_ADMIN_API_KEY"
-   export GHOST_API_URL="https://yourblog.ghost.io"
+   # Store key in 1Password
+   op item create --category=API_CREDENTIAL \
+     --title="Ghost Admin API" \
+     admin_key[password]="YOUR_ADMIN_API_KEY" \
+     api_url[text]="https://yourblog.ghost.io"
+
+   # Use in commands
+   export GHOST_ADMIN_KEY=$(op read "op://Private/Ghost Admin API/admin_key")
+   export GHOST_API_URL=$(op read "op://Private/Ghost Admin API/api_url")
    ```
+
+   **Security Notes:**
+   - Keys provide **full site access** - protect them like passwords
+   - Rotate keys every 90 days (create new integration, revoke old)
+   - Never commit to git or share keys publicly
+   - Consider separate keys for production vs. staging
 
 3. **Test connection:**
    See [setup.md](references/setup.md) for detailed authentication and troubleshooting.
