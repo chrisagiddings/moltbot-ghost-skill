@@ -327,12 +327,35 @@ node ghost-crud.js list posts --limit 1
 
 See [references/setup.md](references/setup.md) for complete troubleshooting guide.
 
+## Future Enhancements
+
+This skill provides complete core functionality for Ghost CMS management. See [open issues](https://github.com/chrisagiddings/moltbot-ghost-skill/issues) for planned enhancements:
+
+**Planned for future releases:**
+- Advanced Lexical card types (buttons, audio, video)
+- Theme management and switching
+- Multi-blog support (manage multiple Ghost instances)
+- Navigation configuration
+- Automation workflows and webhooks
+- AI-powered image generation
+- Content snippets and reusable blocks
+
+**Current version (v0.1.0) provides:**
+- ✅ Complete content management (posts, pages, tags)
+- ✅ Full member and subscription management
+- ✅ Comment moderation
+- ✅ Newsletter management
+- ✅ Basic analytics
+- ✅ Image uploads
+- ✅ User management
+
 ## Resources
 
 - **Ghost Admin API Docs:** https://ghost.org/docs/admin-api/
 - **Ghost Content API Docs:** https://ghost.org/docs/content-api/ (read-only public API)
 - **Ghost Community:** https://forum.ghost.org
 - **Issue Tracker:** https://github.com/chrisagiddings/moltbot-ghost-skill/issues
+- **Enhancement Requests:** See open issues for planned features
 
 ## License
 
