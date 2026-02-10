@@ -172,3 +172,164 @@ export {
   structuredToLexical,
   stringifyLexical
 };
+
+/**
+ * Create a button card
+ * @param {string} buttonText - Button label
+ * @param {string} buttonUrl - Link destination
+ * @param {string} alignment - "left" or "center" (default: "center")
+ */
+function createButtonCard(buttonText, buttonUrl, alignment = "center") {
+  return {
+    type: "button",
+    version: 1,
+    buttonText,
+    alignment,
+    buttonUrl
+  };
+}
+
+/**
+ * Create a toggle (collapsible) card
+ * @param {string} heading - Toggle header/title
+ * @param {string} content - Collapsible content (HTML)
+ */
+function createToggleCard(heading, content) {
+  return {
+    type: "toggle",
+    version: 1,
+    heading: `<span style="white-space: pre-wrap;">${heading}</span>`,
+    content: `<p dir="ltr"><span style="white-space: pre-wrap;">${content}</span></p>`
+  };
+}
+
+/**
+ * Create a video card
+ * @param {string} src - Video file URL
+ * @param {object} options - Optional settings
+ */
+function createVideoCard(src, options = {}) {
+  return {
+    type: "video",
+    version: 1,
+    src,
+    caption: options.caption ? `<p dir="ltr"><span style="white-space: pre-wrap;">${options.caption}</span></p>` : "",
+    fileName: options.fileName || "",
+    mimeType: options.mimeType || "",
+    width: options.width || null,
+    height: options.height || null,
+    duration: options.duration || 0,
+    thumbnailSrc: options.thumbnailSrc || "",
+    customThumbnailSrc: options.customThumbnailSrc || "",
+    thumbnailWidth: options.thumbnailWidth || null,
+    thumbnailHeight: options.thumbnailHeight || null,
+    cardWidth: options.cardWidth || "regular",
+    loop: options.loop || false
+  };
+}
+
+/**
+ * Create an audio card
+ * @param {string} src - Audio file URL
+ * @param {string} title - Audio title
+ * @param {object} options - Optional settings
+ */
+function createAudioCard(src, title, options = {}) {
+  return {
+    type: "audio",
+    version: 1,
+    duration: options.duration || 0,
+    mimeType: options.mimeType || "audio/mpeg",
+    src,
+    title,
+    thumbnailSrc: options.thumbnailSrc || ""
+  };
+}
+
+/**
+ * Create a file download card
+ * @param {string} src - File URL
+ * @param {string} fileTitle - Display title
+ * @param {object} options - Optional settings
+ */
+function createFileCard(src, fileTitle, options = {}) {
+  return {
+    type: "file",
+    src,
+    fileTitle,
+    fileCaption: options.fileCaption || "",
+    fileName: options.fileName || "",
+    fileSize: options.fileSize || 0
+  };
+}
+
+/**
+ * Create a product card
+ * @param {string} title - Product name
+ * @param {string} description - Product description
+ * @param {object} options - Optional settings
+ */
+function createProductCard(title, description, options = {}) {
+  return {
+    type: "product",
+    version: 1,
+    productImageSrc: options.imageSrc || "",
+    productImageWidth: options.imageWidth || null,
+    productImageHeight: options.imageHeight || null,
+    productTitle: `<span style="white-space: pre-wrap;">${title}</span>`,
+    productDescription: `<p dir="ltr"><span style="white-space: pre-wrap;">${description}</span></p>`,
+    productRatingEnabled: options.ratingEnabled || false,
+    productStarRating: options.starRating || 5,
+    productButtonEnabled: options.buttonEnabled || false,
+    productButton: options.buttonText || "",
+    productUrl: options.productUrl || ""
+  };
+}
+
+/**
+ * Create a paywall divider
+ */
+function createPaywallCard() {
+  return {
+    type: "paywall",
+    version: 1
+  };
+}
+
+/**
+ * Create an embed card
+ * @param {string} url - URL to embed (YouTube, Spotify, Twitter, etc.)
+ * 
+ * Note: Ghost will automatically fetch oEmbed metadata when the post is created.
+ * This creates a minimal structure that Ghost will populate.
+ */
+function createEmbedCard(url) {
+  return {
+    type: "embed",
+    version: 1,
+    url,
+    embedType: "",  // Ghost will populate this
+    html: "",        // Ghost will populate this
+    metadata: {},    // Ghost will populate this
+    caption: ""
+  };
+}
+
+// Update exports
+export {
+  createTextNode,
+  createParagraph,
+  createHeading,
+  buildLexical,
+  textToLexical,
+  structuredToLexical,
+  stringifyLexical,
+  createButtonCard,
+  createToggleCard,
+  createVideoCard,
+  createAudioCard,
+  createFileCard,
+  createProductCard,
+  createPaywallCard,
+  createEmbedCard
+};
