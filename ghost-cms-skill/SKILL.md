@@ -1,7 +1,7 @@
 ---
 name: ghost-cms-skill
 description: Comprehensive Ghost CMS integration for creating, publishing, scheduling, and managing blog content, newsletters, members, and analytics. Use when working with Ghost blogs for content creation (drafts, publishing, scheduling), member/subscriber management (tiers, newsletters), comment moderation, or analytics (popular posts, subscriber growth). Supports all Ghost Admin API operations.
-metadata: {"openclaw":{"disable-model-invocation":true,"capabilities":["content-management","member-management","subscription-management","comment-management","user-management","media-management","destructive-operations","public-publishing"],"requires":{"env":["GHOST_ADMIN_KEY","GHOST_API_URL"],"bins":["node","npm"]},"primaryEnv":"GHOST_ADMIN_KEY","install":{"type":"npm","directory":"scripts","command":"npm install","dependencies":["form-data@^4.0.5","jsonwebtoken@^9.0.3","gscan@^4.43.0"]},"credentials":{"types":[{"type":"file","locations":["~/.config/ghost/api_key","~/.config/ghost/api_url"],"description":"Ghost Admin API credentials"},{"type":"env","variables":[{"name":"GHOST_ADMIN_KEY","description":"Ghost Admin API key (JWT)","required":true},{"name":"GHOST_API_URL","description":"Ghost site URL (Ghost Pro OR self-hosted, include :PORT if needed)","required":true}]}]}}}
+metadata: {"openclaw":{"disable-model-invocation":true,"capabilities":["content-management","member-management","subscription-management","comment-management","user-management","media-management","destructive-operations","public-publishing"],"requires":{"env":["GHOST_ADMIN_KEY","GHOST_API_URL"],"bins":["node","npm"]},"primaryEnv":"GHOST_ADMIN_KEY","install":{"type":"npm","directory":"scripts","command":"npm install","dependencies":["form-data@^4.0.5","jsonwebtoken@^9.0.3","gscan@^5.2.4"]},"credentials":{"types":[{"type":"file","locations":["~/.config/ghost/api_key","~/.config/ghost/api_url"],"description":"Ghost Admin API credentials"},{"type":"env","variables":[{"name":"GHOST_ADMIN_KEY","description":"Ghost Admin API key (JWT)","required":true},{"name":"GHOST_API_URL","description":"Ghost site URL (Ghost Pro OR self-hosted, include :PORT if needed)","required":true}]}]}}}
 ---
 
 # Ghost CMS
@@ -127,7 +127,7 @@ For detailed operation documentation, see [api-reference.md](references/api-refe
    **Dependencies installed:**
    - `form-data` (^4.0.5) - Multipart file uploads (theme ZIP files)
    - `jsonwebtoken` (^9.0.3) - JWT token generation for Ghost Admin API authentication
-   - `gscan` (^4.43.0) - Official Ghost theme validator (from TryGhost)
+   - `gscan` (^5.2.4) - Official Ghost theme validator (from TryGhost)
 
    **All dependencies from public npm registry. No custom downloads.**
 
