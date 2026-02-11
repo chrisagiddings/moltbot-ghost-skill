@@ -1,5 +1,14 @@
 # Changelog - Ghost CMS Skill
 
+## [0.1.2] - 2026-02-11
+
+### 🔧 Fixes
+- **ClawdHub Registry Metadata** - Fixed inconsistent metadata extraction (Issue #28)
+  - Registry now properly reflects `disable-model-invocation: true` from SKILL.md
+  - Registry now properly reflects npm install spec with dependencies
+  - Clears "Suspicious" rating caused by metadata mismatch
+  - No functional changes to skill behavior
+
 ## [2.0.2] - 2026-02-01
 
 ### 📝 Documentation
