@@ -388,7 +388,34 @@ See [snippets/README.md](snippets/README.md) for complete documentation.
 
 **📖 Complete Documentation:** [lexical-cards.md](references/lexical-cards.md) - Likely the most comprehensive public documentation of Ghost Lexical card types, with complete JSON structures, field references, and usage examples for all 23 card types.
 
-**🛠️ Helper Functions:** [lexical-builder.js](scripts/lexical-builder.js) - Builder functions for programmatic card creation.
+**🛠️ Helper Functions:** [lexical-builder.js](scripts/lexical-builder.js) - **Complete set of 20+ builder functions** for all documented card types:
+
+```javascript
+import {
+  // Text & basic content
+  createParagraph, createHeading, createMarkdownCard,
+  
+  // Media cards
+  createImageCard, createGalleryCard, createBookmarkCard,
+  
+  // Layout & design
+  createCalloutCard, createHorizontalRule, createHeaderCard,
+  
+  // Interactive
+  createButtonCard, createToggleCard, createSignupCard,
+  
+  // Upload cards
+  createVideoCard, createAudioCard, createFileCard,
+  
+  // Marketing & advanced
+  createCallToActionCard, createProductCard, createPaywallCard,
+  
+  // Developer content
+  createHTMLCard, createEmbedCard
+} from './scripts/lexical-builder.js';
+```
+
+Every documented card type has a helper function with smart defaults and full customization options.
 
 ## Future Enhancements
 
