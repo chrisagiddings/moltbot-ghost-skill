@@ -19,11 +19,47 @@ let LIBRARY_DIR = getLibraryPath();
 const EXAMPLES_DIR = getExamplesPath();
 
 /**
+ * Validate snippet name to prevent path traversal attacks
+ * CRITICAL: This function prevents arbitrary file write/delete vulnerabilities
+ */
+function validateSnippetName(name) {
+  if (!name || typeof name !== 'string') {
+    throw new Error('Snippet name is required and must be a string');
+  }
+  
+  // Prevent path traversal sequences
+  if (name.includes('..') || name.includes('/') || name.includes('\\')) {
+    throw new Error('Invalid snippet name: path traversal not allowed');
+  }
+  
+  // Prevent absolute paths
+  if (path.isAbsolute(name)) {
+    throw new Error('Invalid snippet name: absolute paths not allowed');
+  }
+  
+  // Only allow alphanumeric, hyphens, underscores
+  const validNameRegex = /^[\w\-]+$/;
+  if (!validNameRegex.test(name)) {
+    throw new Error('Invalid snippet name: only alphanumeric, hyphens, and underscores allowed');
+  }
+  
+  // Prevent empty name after validation
+  if (name.length === 0 || name.length > 100) {
+    throw new Error('Invalid snippet name: must be 1-100 characters');
+  }
+  
+  return name;
+}
+
+/**
  * Load a snippet from library or examples
  */
 export function loadSnippet(name, useExample = false) {
+  // CRITICAL: Validate name to prevent path traversal
+  const validatedName = validateSnippetName(name);
+  
   const dir = useExample ? EXAMPLES_DIR : LIBRARY_DIR;
-  const snippetPath = path.join(dir, `${name}.json`);
+  const snippetPath = path.join(dir, `${validatedName}.json`);
   
   if (!fs.existsSync(snippetPath)) {
     throw new Error(`Snippet not found: ${name}`);
@@ -37,11 +73,14 @@ export function loadSnippet(name, useExample = false) {
  * Save a snippet to library
  */
 export function saveSnippet(name, cards) {
+  // CRITICAL: Validate name to prevent arbitrary file write
+  const validatedName = validateSnippetName(name);
+  
   if (!fs.existsSync(LIBRARY_DIR)) {
     fs.mkdirSync(LIBRARY_DIR, { recursive: true });
   }
   
-  const snippetPath = path.join(LIBRARY_DIR, `${name}.json`);
+  const snippetPath = path.join(LIBRARY_DIR, `${validatedName}.json`);
   fs.writeFileSync(snippetPath, JSON.stringify(cards, null, 2));
   return snippetPath;
 }
@@ -65,7 +104,10 @@ export function listSnippets(includeExamples = false) {
  * Delete a snippet from library
  */
 export function deleteSnippet(name) {
-  const snippetPath = path.join(LIBRARY_DIR, `${name}.json`);
+  // CRITICAL: Validate name to prevent arbitrary file deletion
+  const validatedName = validateSnippetName(name);
+  
+  const snippetPath = path.join(LIBRARY_DIR, `${validatedName}.json`);
   
   if (!fs.existsSync(snippetPath)) {
     throw new Error(`Snippet not found: ${name}`);
