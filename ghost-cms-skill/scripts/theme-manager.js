@@ -114,6 +114,36 @@ function uploadTheme(zipPath, activate = false) {
   });
 }
 
+// Validate theme name to prevent path traversal in API endpoints
+function validateThemeName(themeName) {
+  if (!themeName || typeof themeName !== 'string') {
+    throw new Error('Theme name is required and must be a string');
+  }
+  
+  // Prevent path traversal sequences
+  if (themeName.includes('..') || themeName.includes('/') || themeName.includes('\\')) {
+    throw new Error('Invalid theme name: path traversal not allowed');
+  }
+  
+  // Prevent absolute paths
+  if (themeName.startsWith('/')) {
+    throw new Error('Invalid theme name: absolute paths not allowed');
+  }
+  
+  // Only allow alphanumeric, hyphens, underscores, dots
+  const validNameRegex = /^[\w\-\.]+$/;
+  if (!validNameRegex.test(themeName)) {
+    throw new Error('Invalid theme name: only alphanumeric, hyphens, underscores, and dots allowed');
+  }
+  
+  // Validate length
+  if (themeName.length === 0 || themeName.length > 100) {
+    throw new Error('Invalid theme name: must be 1-100 characters');
+  }
+  
+  return themeName;
+}
+
 // Validate output path to prevent arbitrary file write
 function validateOutputPath(outputPath) {
   if (!outputPath) {
@@ -158,11 +188,12 @@ function validateOutputPath(outputPath) {
 
 // Download theme
 function downloadTheme(themeName, outputPath) {
-  // CRITICAL: Validate output path to prevent arbitrary file write
+  // CRITICAL: Validate inputs to prevent attacks
+  const validatedThemeName = validateThemeName(themeName);
   const validatedPath = validateOutputPath(outputPath);
   
   const token = generateToken();
-  const url = new URL(`${apiUrl}/ghost/api/admin/themes/${themeName}/download/`);
+  const url = new URL(`${apiUrl}/ghost/api/admin/themes/${validatedThemeName}/download/`);
   
   return new Promise((resolve, reject) => {
     const req = https.request(url, {
@@ -249,8 +280,10 @@ const commands = {
   },
   
   async activate(themeName) {
-    console.log(`✨ Activating theme: ${themeName}...`);
-    const result = await ghostApi(`/themes/${themeName}/activate/`, 'PUT');
+    // CRITICAL: Validate theme name to prevent path traversal in API endpoint
+    const validatedThemeName = validateThemeName(themeName);
+    console.log(`✨ Activating theme: ${validatedThemeName}...`);
+    const result = await ghostApi(`/themes/${validatedThemeName}/activate/`, 'PUT');
     
     if (result.themes) {
       const theme = result.themes[0];
@@ -265,19 +298,21 @@ const commands = {
   },
   
   async delete(themeName) {
-    console.log(`🗑️  Deleting theme: ${themeName}...`);
+    // CRITICAL: Validate theme name to prevent path traversal in API endpoint
+    const validatedThemeName = validateThemeName(themeName);
+    console.log(`🗑️  Deleting theme: ${validatedThemeName}...`);
     
     // Check if active first
     const list = await ghostApi('/themes/');
-    const theme = list.themes?.find(t => t.name === themeName);
+    const theme = list.themes?.find(t => t.name === validatedThemeName);
     
     if (!theme) {
-      console.error(`❌ Theme not found: ${themeName}`);
+      console.error(`❌ Theme not found: ${validatedThemeName}`);
       return;
     }
     
     if (theme.active) {
-      console.error(`❌ Cannot delete active theme: ${themeName}`);
+      console.error(`❌ Cannot delete active theme: ${validatedThemeName}`);
       console.error('   Activate a different theme first:');
       list.themes.filter(t => !t.active).forEach(t => {
         console.error(`   node theme-manager.js activate ${t.name}`);
@@ -285,10 +320,10 @@ const commands = {
       return;
     }
     
-    const result = await ghostApi(`/themes/${themeName}/`, 'DELETE');
+    const result = await ghostApi(`/themes/${validatedThemeName}/`, 'DELETE');
     
     if (result.statusCode === 204) {
-      console.log(`✅ Theme deleted: ${themeName}`);
+      console.log(`✅ Theme deleted: ${validatedThemeName}`);
     } else if (result.errors) {
       console.error('❌ Deletion failed:');
       result.errors.forEach(e => console.error(`   ${e.message}`));
