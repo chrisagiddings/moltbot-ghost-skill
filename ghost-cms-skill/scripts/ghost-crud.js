@@ -22,6 +22,32 @@ const apiUrl = fs.readFileSync(path.join(configDir, 'api_url'), 'utf8').trim();
 // Split key into id and secret
 const [keyId, keySecret] = apiKey.split(':');
 
+// Validate post ID or slug to prevent path traversal in API endpoints
+function validatePostIdentifier(identifier) {
+  if (!identifier || typeof identifier !== 'string') {
+    throw new Error('Post identifier is required and must be a string');
+  }
+  
+  // Prevent path traversal sequences
+  if (identifier.includes('..') || identifier.includes('//')) {
+    throw new Error('Invalid identifier: path traversal not allowed');
+  }
+  
+  // Ghost post IDs are 24-char hex, slugs are alphanumeric + hyphens
+  // Allow alphanumeric, hyphens, underscores (for slugs and IDs)
+  const validIdRegex = /^[\w\-]+$/;
+  if (!validIdRegex.test(identifier)) {
+    throw new Error('Invalid identifier: only alphanumeric, hyphens, and underscores allowed');
+  }
+  
+  // Validate length (Ghost IDs are 24 chars, slugs typically < 200)
+  if (identifier.length === 0 || identifier.length > 200) {
+    throw new Error('Invalid identifier: must be 1-200 characters');
+  }
+  
+  return identifier;
+}
+
 // Generate JWT token
 function generateToken() {
   const payload = {
@@ -112,8 +138,10 @@ async function createPost(title, content, options = {}) {
 
 // READ - Get post(s)
 async function readPost(slugOrId, asHtml = true) {
+  // CRITICAL: Validate identifier to prevent path traversal in API endpoint
+  const validatedId = validatePostIdentifier(slugOrId);
   const formats = asHtml ? '?formats=html' : '';
-  const result = await ghostApi(`/posts/${slugOrId}/${formats}`);
+  const result = await ghostApi(`/posts/${validatedId}/${formats}`);
   return result.data.posts[0];
 }
 
@@ -127,6 +155,9 @@ async function listPosts(filter = '', limit = 15) {
 
 // UPDATE - Update post with Lexical content
 async function updatePost(postId, updates) {
+  // CRITICAL: Validate identifier to prevent path traversal in API endpoint
+  const validatedId = validatePostIdentifier(postId);
+  
   // If content is provided, convert to Lexical
   if (updates.content) {
     let lexicalContent;
@@ -145,13 +176,15 @@ async function updatePost(postId, updates) {
     posts: [updates]
   };
 
-  const result = await ghostApi(`/posts/${postId}/`, 'PUT', postData);
+  const result = await ghostApi(`/posts/${validatedId}/`, 'PUT', postData);
   return result.data.posts[0];
 }
 
 // DELETE - Delete a post
 async function deletePost(postId) {
-  const result = await ghostApi(`/posts/${postId}/`, 'DELETE');
+  // CRITICAL: Validate identifier to prevent path traversal in API endpoint
+  const validatedId = validatePostIdentifier(postId);
+  const result = await ghostApi(`/posts/${validatedId}/`, 'DELETE');
   return result;
 }
 
