@@ -403,6 +403,209 @@ curl -F "file=@my-theme-v1.2.0.zip" -F "activate=true" ...
 - Remove unused themes
 - Use trusted theme sources only
 
+## Theme Validation
+
+**Validate themes before uploading using official Ghost validator (gscan).**
+
+### Why Validate?
+
+**Catch errors before deployment:**
+- Missing required files
+- Invalid Handlebars syntax
+- Incompatible Ghost version
+- Deprecated helper usage
+- Accessibility issues
+
+**Same validator used by:**
+- Ghost Admin (when uploading themes)
+- Ghost Marketplace (theme submissions)
+- Official Ghost development
+
+### Using theme-validator.js
+
+**Basic validation:**
+```bash
+cd ghost-cms-skill/scripts
+
+# Validate theme directory
+node theme-validator.js ~/themes/my-theme/
+
+# Validate ZIP file
+node theme-validator.js theme.zip
+```
+
+**Options:**
+```bash
+# Target specific Ghost version
+node theme-validator.js theme.zip --version v5
+node theme-validator.js theme.zip --version v6
+
+# JSON output for automation
+node theme-validator.js theme.zip --json
+
+# Show only blocking errors
+node theme-validator.js theme.zip --errors-only
+```
+
+### Validation Levels
+
+**Errors (must fix):**
+- Missing required files (package.json, index.hbs, post.hbs)
+- Invalid Handlebars syntax
+- Invalid package.json format
+- Incompatible Ghost version
+- **Theme will be rejected on upload**
+
+**Warnings (should fix):**
+- Deprecated Ghost helpers
+- Accessibility issues
+- Missing recommended files
+- **Theme will upload but may have issues**
+
+**Recommendations (nice to have):**
+- Performance optimizations
+- Best practices
+- Modern Ghost features
+- **Theme works fine, but could be better**
+
+### Example Output
+
+**Valid theme:**
+```
+🔍 Validating theme: my-theme.zip
+   Target: Ghost v5
+
+✅ Theme is valid! Safe to upload.
+   Note: 2 warning(s) found - consider fixing for best compatibility.
+```
+
+**Theme with errors:**
+```
+🔍 Validating theme: my-theme.zip
+   Target: Ghost v5
+
+❌ Errors (2):
+   These must be fixed before uploading:
+
+   • Templates must contain valid Handlebars
+     → post.hbs is missing
+
+   • package.json engines.ghost is required
+     → Add "engines": {"ghost": ">=5.0.0"}
+
+❌ Validation failed (2 error(s) must be fixed)
+```
+
+### Development Workflow
+
+**Safe theme deployment:**
+```bash
+# 1. Validate during development
+node theme-validator.js ~/themes/my-theme/
+
+# 2. Fix any errors
+# ...edit theme files...
+
+# 3. Re-validate
+node theme-validator.js ~/themes/my-theme/
+
+# 4. Package when valid
+cd ~/themes/my-theme/
+zip -r ../my-theme.zip . -x "*.git*" -x "node_modules/*"
+
+# 5. Upload with confidence
+node theme-manager.js upload ../my-theme.zip
+```
+
+### CI/CD Integration
+
+**Automated validation in CI/CD:**
+```bash
+#!/bin/bash
+# validate-and-deploy.sh
+
+# Validate theme
+node theme-validator.js theme.zip --json > validation.json
+
+# Check exit code
+if [ $? -eq 0 ]; then
+  echo "✅ Theme valid - deploying"
+  node theme-manager.js upload theme.zip --activate
+else
+  echo "❌ Theme validation failed"
+  cat validation.json
+  exit 1
+fi
+```
+
+### Common Validation Errors
+
+**Missing required files:**
+```
+Error: post.hbs is missing
+Fix: Create post.hbs template
+```
+
+**Invalid package.json:**
+```
+Error: engines.ghost is required
+Fix: Add "engines": {"ghost": ">=5.0.0"} to package.json
+```
+
+**Deprecated helpers:**
+```
+Warning: {{tags}} is deprecated in index.hbs
+Fix: Use {{#foreach tags}}...{{/foreach}} instead
+```
+
+**Invalid Handlebars:**
+```
+Error: Syntax error in default.hbs line 42
+Fix: Check for unclosed {{#if}} or {{#foreach}} blocks
+```
+
+### What gscan Validates
+
+**File structure:**
+- Required files present (package.json, index.hbs, post.hbs)
+- Valid ZIP structure (files at root, not nested in folder)
+- Proper file organization
+
+**package.json:**
+- Required fields (name, version, engines.ghost)
+- Valid JSON format
+- Ghost version compatibility
+- Recommended fields present
+
+**Handlebars templates:**
+- Valid syntax (no parse errors)
+- Ghost helper usage (valid vs deprecated)
+- Template structure
+- Required helpers present
+
+**Best practices:**
+- Accessibility (alt text, semantic HTML)
+- Performance (image sizes, asset loading)
+- Modern Ghost features
+- i18n support
+
+### Exit Codes
+
+**For automation:**
+- `0` - Theme is valid (no errors)
+- `1` - Theme has errors (must fix before upload)
+- `2` - Invalid arguments or file not found
+
+**Use in scripts:**
+```bash
+if node theme-validator.js theme.zip; then
+  echo "Valid - proceeding"
+else
+  echo "Invalid - aborting"
+  exit 1
+fi
+```
+
 ## Script Usage
 
 **Using the theme-manager.js CLI:**
