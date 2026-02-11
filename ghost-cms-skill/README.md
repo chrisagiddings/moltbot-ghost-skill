@@ -329,15 +329,26 @@ See [references/setup.md](references/setup.md) for complete troubleshooting guid
 
 ## Snippet Library
 
-**Local snippet storage system** - workaround for Ghost API limitation (integration tokens blocked from `/snippets/` endpoint).
+**Local snippet storage system** - workaround for Ghost's native snippet API limitation.
 
-**Features:**
+**About Ghost Snippets:**
+
+Ghost has a built-in snippet feature that allows authors to save and reuse content blocks (signatures, CTAs, disclosures, etc.) in the editor. However, the Admin API **blocks access to snippets** for integration tokens (403 Forbidden), meaning:
+
+- ❌ Cannot list snippets programmatically
+- ❌ Cannot fetch snippet content via API
+- ❌ Cannot use author's existing Ghost snippets in code
+
+**Our Solution:**
+
+This skill includes a **local snippet library** that provides the same functionality for programmatic use:
+
 - ✅ Reusable content blocks (signatures, CTAs, disclosures)
-- ✅ Lexical JSON fragments
-- ✅ CLI management tool
-- ✅ Example snippets included
-- ✅ Git version control
-- ✅ Programmatic injection
+- ✅ Stored as Lexical JSON fragments (same format Ghost uses)
+- ✅ CLI management tool for easy snippet handling
+- ✅ Example snippets included to get started
+- ✅ Git version control (bonus: Ghost doesn't version snippets!)
+- ✅ Programmatic injection into posts via API
 
 **Quick Start:**
 ```bash

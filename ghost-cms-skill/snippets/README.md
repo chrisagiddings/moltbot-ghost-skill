@@ -2,13 +2,129 @@
 
 **Local snippet storage and management for Ghost CMS skill.**
 
-## Problem
+## Understanding Ghost Snippets
 
-Ghost Admin API restricts snippet access for integration tokens (403 Forbidden). This prevents programmatic insertion of Ghost snippets via API.
+### What Are Ghost Snippets?
 
-## Solution
+**Ghost's native snippet feature** allows authors to save reusable content blocks in the Ghost editor:
 
-This directory provides a **local snippet library** that stores reusable content as Lexical JSON fragments.
+- 📝 **Create once, reuse everywhere** - Save frequently-used content (signatures, CTAs, disclosures)
+- 🎨 **Any content type** - Bookmarks, callouts, paragraphs, images, or any Lexical cards
+- 📋 **Named and organized** - Give snippets descriptive names ("Signature", "Newsletter CTA", "Affiliate Disclosure")
+- 🖱️ **Easy insertion** - Insert via Ghost editor UI (type `/` and select snippet)
+- 💾 **Stored in Ghost database** - Part of your Ghost site, accessible to all authors
+
+**Example Ghost snippets:**
+- "Signature" - Author bio with social links
+- "Book Insert" - Standard book review template
+- "Newsletter Footer" - Subscription CTA with button
+- "Disclosure" - Affiliate link disclaimer
+
+### How Ghost Snippets Work
+
+**Under the hood:**
+
+1. **You create content** (e.g., a bookmark card for your Twitch profile)
+2. **Save as snippet** via Ghost editor → "Save as snippet" → Name it "Signature"
+3. **Ghost stores the Lexical cards** as a template in the database
+4. **When inserted**, Ghost **copies** the cards into your post
+5. **No reference remains** - the cards become independent
+
+**Important:** Ghost snippets are **templates, not live references**. Updating a snippet doesn't update existing posts that used it.
+
+**Lexical structure example:**
+
+When you insert a snippet created from a bookmark, Ghost copies the bookmark card:
+
+```json
+{
+  "type": "bookmark",
+  "url": "https://www.twitch.tv/yourname",
+  "metadata": { "title": "...", "description": "..." },
+  "caption": "Follow me on Twitch!"
+}
+```
+
+**No "snippet" card type exists** - snippets are just collections of regular Lexical cards.
+
+---
+
+## The Problem: API Limitation
+
+### Ghost Admin API Restriction
+
+**The Ghost Admin API blocks snippet access for integration tokens:**
+
+```bash
+GET /ghost/api/admin/snippets/
+→ 403 Forbidden
+```
+
+**What this means:**
+
+❌ **Cannot list snippets** - Can't see what snippets exist  
+❌ **Cannot fetch snippet content** - Can't get the Lexical cards  
+❌ **Cannot insert by reference** - Can't say "insert snippet 'Signature'"  
+❌ **Cannot discover author's snippets** - If you have 12 snippets in Ghost, we can't access them programmatically  
+
+**Why this limitation exists:**
+
+- Integration tokens have restricted permissions (security feature)
+- Snippets are considered author-specific content
+- Only user authentication (logging in) can access snippets
+- API integration tokens are meant for automated/programmatic use
+
+**Impact:**
+
+If you have existing snippets in Ghost (e.g., "Signature", "Book Insert", "Newsletter Footer"), you **cannot** programmatically:
+- List them via API
+- Fetch their content
+- Use them when building posts programmatically
+
+---
+
+## The Solution: Local Snippet Library
+
+This directory provides a **local snippet library** that replicates Ghost's snippet functionality for programmatic use:
+
+**How it works:**
+
+1. **Store snippets as JSON files** (same Lexical card format Ghost uses)
+2. **Load snippets programmatically** in your code
+3. **Inject into posts** when building content via API
+4. **Version control** via git (bonus feature Ghost doesn't have!)
+
+**Functionally equivalent to Ghost snippets:**
+- ✅ Reusable content blocks
+- ✅ Stored as Lexical card arrays
+- ✅ Copied into posts (not referenced)
+- ✅ Same card types Ghost uses
+
+**Key difference:**
+- Ghost snippets: Stored in Ghost database, accessible via editor UI
+- Local snippets: Stored as JSON files, accessible via code/CLI
+
+### Migrating Ghost Snippets to Local Library
+
+**If you have existing snippets in Ghost**, you'll need to manually export them:
+
+**Option 1: Via Ghost Editor (Manual)**
+1. Create a test post in Ghost
+2. Insert each snippet via editor
+3. Fetch the post via API (`GET /posts/{id}?formats=lexical`)
+4. Extract the snippet cards from the Lexical JSON
+5. Save as local JSON file
+
+**Option 2: Database Access (Self-Hosted Only)**
+1. Query Ghost database `snippets` table
+2. Extract Lexical content for each snippet
+3. Convert to local JSON files
+
+**After migration:**
+- ✅ Programmatic access to your snippets
+- ✅ Use in automated post creation
+- ✅ Git version control
+- ⚠️ Must manually sync changes (no automatic sync with Ghost)
 
 ## Directory Structure
 

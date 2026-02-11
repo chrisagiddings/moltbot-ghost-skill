@@ -350,11 +350,74 @@ Supports inline markdown syntax for technical content.
 ## Known Limitations
 
 ### Snippets
-Snippets cannot be accessed or inserted via the Admin API with integration tokens (403 Forbidden). Snippets must be:
-- Manually inserted via Ghost Admin UI, or
-- Stored locally and programmatically inserted as card content
 
-See issue #13 for planned snippet support.
+**What Are Ghost Snippets?**
+
+Ghost's native snippet feature allows authors to save and reuse content blocks:
+- 📝 Create frequently-used content once (signatures, CTAs, disclosures, etc.)
+- 🎨 Save any content type (bookmarks, callouts, paragraphs, images, buttons, etc.)
+- 📋 Give snippets descriptive names ("Signature", "Newsletter Footer", "Disclosure")
+- 🖱️ Insert via Ghost editor (type `/` and select snippet name)
+
+**How Snippets Work:**
+
+1. Author creates content (e.g., a bookmark card)
+2. Saves it as a snippet with a name
+3. Ghost stores the Lexical cards in the database
+4. When inserted, Ghost **copies** the cards into the post
+5. **No reference remains** - cards become independent
+
+**Important:** There is **no "snippet" card type** in Lexical. Snippets are stored as their original card types (bookmark, paragraph, callout, etc.). When inserted, they appear as regular cards with no snippet metadata.
+
+**Example:**
+
+A snippet created from a bookmark card is stored as:
+```json
+{
+  "type": "bookmark",
+  "url": "https://example.com",
+  "metadata": { ... },
+  "caption": "Check this out!"
+}
+```
+
+When inserted into a post, it's just a bookmark card - no snippet ID or reference.
+
+**Admin API Limitation:**
+
+❌ **Cannot access snippets via Admin API with integration tokens (403 Forbidden)**
+
+This means programmatically you **cannot**:
+- List available snippets (`GET /snippets/` → 403)
+- Fetch snippet content
+- Get snippet metadata (names, IDs)
+- Insert snippets by reference
+- Discover what snippets an author has created
+
+**Why This Limitation Exists:**
+
+- Integration tokens have restricted permissions (security)
+- Snippets are considered author-specific content
+- Only user authentication (manual login) can access snippets
+- API is designed for automated/programmatic use, not author tools
+
+**Workarounds:**
+
+1. **Manual insertion:** Use Ghost Admin UI to insert snippets
+2. **Local snippet library:** Store snippet content as JSON files locally (see `snippets/` directory)
+3. **Database access:** Query Ghost database directly (self-hosted only)
+4. **One-time export:** Create test post with snippets, fetch via API, extract cards
+
+**Local Snippet Library:**
+
+The skill includes a local snippet system (`snippets/` directory) that provides:
+- ✅ Programmatic access to reusable content
+- ✅ Same Lexical card format as Ghost
+- ✅ CLI management tools
+- ✅ Git version control
+- ⚠️ Must manually sync with Ghost snippets (no automatic sync)
+
+See `snippets/README.md` for complete documentation on using local snippets as a workaround.
 
 ## Interactive Content Cards
 

@@ -121,6 +121,16 @@ See **[lexical-cards.md](references/lexical-cards.md)** for:
 - Product cards, headers, call-to-action, paywall
 - Member visibility and content personalization
 
+**⚠️ Ghost Snippets Limitation:**
+
+Ghost's native snippet feature (reusable content blocks saved in the editor) **cannot be accessed via the Admin API** with integration tokens (403 Forbidden). This means:
+
+- ❌ Cannot list available snippets
+- ❌ Cannot fetch snippet content
+- ❌ Cannot programmatically use author's existing snippets
+
+**Workaround:** Use the local snippet library (`snippets/` directory) to store reusable content as JSON files. See `snippets/README.md` for complete documentation on creating and using local snippets for programmatic post creation.
+
 ### Analytics & Insights
 **When to use:** Checking subscriber counts, popular content, traffic trends
 
