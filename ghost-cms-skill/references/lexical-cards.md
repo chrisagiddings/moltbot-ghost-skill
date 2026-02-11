@@ -1,6 +1,48 @@
 # Lexical Card Types Reference
 
-Comprehensive documentation of Ghost's Lexical card types based on analysis of published content.
+**Complete Ghost Lexical card documentation extracted from real Ghost content.**
+
+This is likely the most comprehensive public documentation of Ghost's Lexical card types, focused specifically on Ghost CMS implementations rather than the underlying Lexical framework. All structures verified from actual Ghost posts via the Admin API.
+
+**What's Documented:**
+- 23 Ghost-specific card types with complete JSON structures
+- Required and optional fields for each card
+- Usage examples and best practices
+- Member visibility and content personalization
+- oEmbed metadata structures for embeds
+
+**What's NOT Here:**
+- Underlying Lexical framework internals
+- Ghost theme rendering details
+- Editor UI implementation details
+
+For Ghost Admin API integration, this documentation provides everything needed to programmatically create any content type Ghost supports.
+
+---
+
+## Quick Navigation
+
+**By Category:**
+- [Text Content](#text-content) - Paragraphs, Headings, Markdown
+- [Media Cards](#media-cards) - Images, Galleries, Bookmarks
+- [Media Upload Cards](#media-upload-cards) - Video, Audio, File uploads
+- [Layout Cards](#layout-cards) - Callouts, Dividers
+- [Interactive Content Cards](#interactive-content-cards) - Buttons, Toggles
+- [Newsletter/Email Cards](#newsletteremail-cards) - Signup forms
+- [Advanced Content Cards](#advanced-content-cards) - Products, Headers, Call-to-Action
+- [Developer Content Cards](#developer-content-cards) - HTML, Paywall
+- [Third-Party Embeds](#third-party-embeds) - YouTube, Spotify, Twitter, etc.
+
+**Reference:**
+- [Updated Card Type Index](#updated-card-type-index) - All 23 documented cards
+- [Tips & Best Practices](#tips--best-practices)
+- [Converting HTML to Lexical](#converting-html-to-lexical)
+
+**Extraction Source:** Real Ghost post analyzed via Admin API (`?formats=lexical`)  
+**Last Updated:** February 10, 2026  
+**Card Coverage:** 23 types (complete Ghost editor feature set)
+
+---
 
 ## Text Content
 

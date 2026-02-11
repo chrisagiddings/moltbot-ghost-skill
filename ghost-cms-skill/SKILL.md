@@ -113,6 +113,14 @@ See **[content.md](references/content.md)** for:
 - Managing tags, featured images, metadata
 - Working with pages vs posts
 
+See **[lexical-cards.md](references/lexical-cards.md)** for:
+- **Complete Lexical card type reference** (23 documented types)
+- Most comprehensive Ghost Lexical documentation available
+- Full JSON structures with field references
+- Video, audio, file uploads, buttons, toggles, embeds
+- Product cards, headers, call-to-action, paywall
+- Member visibility and content personalization
+
 ### Analytics & Insights
 **When to use:** Checking subscriber counts, popular content, traffic trends
 

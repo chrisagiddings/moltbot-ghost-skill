@@ -360,7 +360,9 @@ See [references/setup.md](references/setup.md) for complete troubleshooting guid
 **Embeds:**
 - ✨ **Embed** - YouTube, Spotify, Twitter, and more via oEmbed
 
-See [lexical-cards.md](references/lexical-cards.md) for complete documentation and [lexical-builder.js](scripts/lexical-builder.js) for helper functions.
+**📖 Complete Documentation:** [lexical-cards.md](references/lexical-cards.md) - Likely the most comprehensive public documentation of Ghost Lexical card types, with complete JSON structures, field references, and usage examples for all 23 card types.
+
+**🛠️ Helper Functions:** [lexical-builder.js](scripts/lexical-builder.js) - Builder functions for programmatic card creation.
 
 ## Future Enhancements
 
