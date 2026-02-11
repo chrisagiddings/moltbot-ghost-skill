@@ -69,6 +69,13 @@ See [SKILL.md](SKILL.md) for detailed security information and [references/api-r
    npm install
    ```
 
+   **What gets installed:**
+   - `form-data` (^4.0.5) - Multipart file uploads (theme ZIP files)
+   - `jsonwebtoken` (^9.0.3) - JWT token generation for Ghost Admin API authentication
+   - `gscan` (^4.43.0) - Official Ghost theme validator (from TryGhost/gscan)
+   
+   All dependencies from public npm registry. No custom downloads or external sources.
+
 3. **Store credentials securely:**
 
    **Option A: Environment Variables (Recommended)**
