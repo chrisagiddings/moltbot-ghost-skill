@@ -3,11 +3,32 @@
 /**
  * Ghost Theme Validator
  * Validates Ghost themes using official gscan validator
+ * 
+ * NOTE: Requires optional dependency 'gscan'
+ * Install with: cd scripts && npm install gscan
  */
 
-import gscan from 'gscan';
 import { basename, extname, resolve } from 'path';
 import { existsSync, statSync } from 'fs';
+
+// Check if gscan is available (optional dependency)
+let gscan;
+try {
+  gscan = (await import('gscan')).default;
+} catch (err) {
+  console.error(`
+❌ Error: gscan is not installed
+
+Theme validation requires the optional 'gscan' dependency.
+
+To install:
+  cd scripts
+  npm install gscan
+
+Then run this command again.
+`);
+  process.exit(1);
+}
 
 // Parse CLI arguments
 const args = process.argv.slice(2);
