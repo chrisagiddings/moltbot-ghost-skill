@@ -99,6 +99,58 @@ For detailed operation documentation, see [api-reference.md](references/api-refe
 3. **Test connection:**
    See [setup.md](references/setup.md) for detailed authentication and troubleshooting.
 
+## Tools & Utilities
+
+### Snippet Extractor
+
+**Purpose:** Migrate existing Ghost snippets to local library for programmatic use.
+
+**Why needed:** Ghost Admin API blocks snippet access (403 Forbidden) for integration tokens. This tool works around that limitation.
+
+**Usage:**
+```bash
+# Extract snippets from a specially-formatted draft post
+node scripts/snippet-extractor.js my-snippets-post
+
+# Validate format before extracting
+node scripts/snippet-extractor.js my-snippets-post --validate
+
+# Preview without saving
+node scripts/snippet-extractor.js my-snippets-post --dry-run
+
+# Custom marker prefix
+node scripts/snippet-extractor.js my-snippets-post --marker "This is:"
+
+# Full help
+node scripts/snippet-extractor.js --help
+```
+
+**Workflow:**
+1. Create draft post in Ghost
+2. For each snippet: add paragraph marker (e.g., "SNIPPET: name" or "This is: name")
+3. Insert the snippet content below each marker
+4. Run extractor → all snippets saved to `snippets/library/`
+
+**Features:**
+- ✅ Extracts all card types (bookmarks, callouts, images, markdown, HTML, etc.)
+- ✅ Preserves exact Lexical structure
+- ✅ Auto-detects credentials from `~/.config/ghost/` or env vars
+- ✅ Supports custom marker formats
+- ✅ Dry-run and validation modes
+- ✅ Verbose output for debugging
+
+**Example:**
+```bash
+# User has 12 snippets in Ghost
+# Creates "My Snippets" draft with markers
+# Runs: node scripts/snippet-extractor.js my-snippets --marker "This is:"
+# Result: All 12 snippets in library/ ready for use
+```
+
+See `snippets/README.md` for complete documentation.
+
+---
+
 ## Core Operations
 
 This skill covers all major Ghost operations. Navigate to the relevant reference for detailed guidance:
@@ -129,7 +181,40 @@ Ghost's native snippet feature (reusable content blocks saved in the editor) **c
 - ❌ Cannot fetch snippet content
 - ❌ Cannot programmatically use author's existing snippets
 
-**Workaround:** Use the local snippet library (`snippets/` directory) to store reusable content as JSON files. See `snippets/README.md` for complete documentation on creating and using local snippets for programmatic post creation.
+**Solution: Automated Snippet Extraction**
+
+The skill includes a **snippet extractor tool** that migrates Ghost snippets to local files:
+
+1. **Create extraction post** in Ghost with all snippets (one-time setup)
+2. **Run extractor:** `node scripts/snippet-extractor.js post-slug`
+3. **Done!** All snippets saved to `snippets/library/` for programmatic use
+
+**Commands:**
+```bash
+# Extract snippets (auto-detects credentials from ~/.config/ghost/)
+node scripts/snippet-extractor.js my-snippets-post
+
+# Validate format before extracting
+node scripts/snippet-extractor.js my-snippets-post --validate
+
+# Preview without saving
+node scripts/snippet-extractor.js my-snippets-post --dry-run
+
+# Custom marker format
+node scripts/snippet-extractor.js my-snippets-post --marker "This is:"
+
+# Full help
+node scripts/snippet-extractor.js --help
+```
+
+**Benefits:**
+- ✅ Migrate all existing Ghost snippets in seconds
+- ✅ Preserves exact Lexical structure (bookmarks, callouts, images, etc.)
+- ✅ Git version control
+- ✅ Use programmatically in automated posts
+- ✅ Works with any card types
+
+See `snippets/README.md` for complete documentation on extraction workflow and local snippet usage.
 
 ### Analytics & Insights
 **When to use:** Checking subscriber counts, popular content, traffic trends

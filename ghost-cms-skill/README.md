@@ -341,8 +341,25 @@ Ghost has a built-in snippet feature that allows authors to save and reuse conte
 
 **Our Solution:**
 
-This skill includes a **local snippet library** that provides the same functionality for programmatic use:
+This skill includes a **complete snippet system** with automated extraction from Ghost:
 
+**🚀 Automated Snippet Extraction:**
+- ✅ Migrate all existing Ghost snippets in one command
+- ✅ Create extraction post in Ghost (one-time setup)
+- ✅ Run extractor script → all snippets saved locally
+- ✅ Preserves exact structure (bookmarks, callouts, images, etc.)
+- ✅ Takes ~15 minutes manual + 5 seconds automated
+
+**Extraction Workflow:**
+```bash
+# 1. Create "My Snippets" draft in Ghost with all your snippets
+# 2. Run extractor
+node scripts/snippet-extractor.js my-snippets-post
+
+# Done! All snippets now in library/
+```
+
+**Local Snippet Library:**
 - ✅ Reusable content blocks (signatures, CTAs, disclosures)
 - ✅ Stored as Lexical JSON fragments (same format Ghost uses)
 - ✅ CLI management tool for easy snippet handling
@@ -350,16 +367,20 @@ This skill includes a **local snippet library** that provides the same functiona
 - ✅ Git version control (bonus: Ghost doesn't version snippets!)
 - ✅ Programmatic injection into posts via API
 
-**Quick Start:**
+**Snippet Management:**
 ```bash
-# List snippets
-node snippets/ghost-snippet.js list --examples
+# Extract from Ghost (one-time migration)
+node scripts/snippet-extractor.js my-snippets-post
 
-# Copy example to library
-node snippets/ghost-snippet.js copy signature-example signature
+# List snippets
+node snippets/ghost-snippet.js list
 
 # Preview snippet
 node snippets/ghost-snippet.js preview signature
+
+# Use in code
+import { loadSnippet } from './snippets/ghost-snippet.js';
+const sig = loadSnippet('signature');
 ```
 
 See [snippets/README.md](snippets/README.md) for complete documentation.
@@ -443,7 +464,9 @@ This skill provides complete core functionality for Ghost CMS management. See [o
 **Current version (v0.1.0) provides:**
 - ✅ Complete content management (posts, pages, tags)
 - ✅ **23 Lexical card types documented** (expanded!)
-- ✅ **Local snippet library system** (new!)
+- ✅ **20+ builder helper functions** for all card types
+- ✅ **Automated snippet extraction tool** (new!)
+- ✅ **Local snippet library system** with CLI
 - ✅ Full member and subscription management
 - ✅ Comment moderation
 - ✅ Newsletter management
