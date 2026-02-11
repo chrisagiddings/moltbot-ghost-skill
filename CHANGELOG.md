@@ -1,5 +1,11 @@
 # Changelog - Ghost CMS Skill
 
+## [0.1.4] - 2026-02-11
+
+### 🔧 Fixes
+- **ClawdHub Display Name** - Corrected display name to "Ghost CMS" (was "Ghost Cms Skill")
+  - No functional changes
+
 ## [0.1.3] - 2026-02-11
 
 ### 🔧 Fixes
