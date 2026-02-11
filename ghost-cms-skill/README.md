@@ -327,6 +327,32 @@ node ghost-crud.js list posts --limit 1
 
 See [references/setup.md](references/setup.md) for complete troubleshooting guide.
 
+## Snippet Library
+
+**Local snippet storage system** - workaround for Ghost API limitation (integration tokens blocked from `/snippets/` endpoint).
+
+**Features:**
+- ✅ Reusable content blocks (signatures, CTAs, disclosures)
+- ✅ Lexical JSON fragments
+- ✅ CLI management tool
+- ✅ Example snippets included
+- ✅ Git version control
+- ✅ Programmatic injection
+
+**Quick Start:**
+```bash
+# List snippets
+node snippets/ghost-snippet.js list --examples
+
+# Copy example to library
+node snippets/ghost-snippet.js copy signature-example signature
+
+# Preview snippet
+node snippets/ghost-snippet.js preview signature
+```
+
+See [snippets/README.md](snippets/README.md) for complete documentation.
+
 ## Lexical Card Support
 
 **23 card types fully documented** with helper functions:
@@ -379,6 +405,7 @@ This skill provides complete core functionality for Ghost CMS management. See [o
 **Current version (v0.1.0) provides:**
 - ✅ Complete content management (posts, pages, tags)
 - ✅ **23 Lexical card types documented** (expanded!)
+- ✅ **Local snippet library system** (new!)
 - ✅ Full member and subscription management
 - ✅ Comment moderation
 - ✅ Newsletter management
