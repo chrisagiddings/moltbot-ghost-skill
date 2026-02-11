@@ -227,6 +227,72 @@ node theme-manager.js activate old-theme  # Rollback if needed
 
 See `references/themes.md` for complete theme management documentation and best practices.
 
+### Theme Validator
+
+**Purpose:** Validate Ghost themes before uploading using official gscan validator.
+
+**Why needed:** Catch errors early - missing files, invalid syntax, deprecated helpers, version incompatibility.
+
+**Usage:**
+```bash
+cd scripts
+
+# Validate theme directory
+node theme-validator.js ~/themes/my-theme/
+
+# Validate ZIP file  
+node theme-validator.js theme.zip
+
+# Target specific Ghost version
+node theme-validator.js theme.zip --version v6
+
+# JSON output for CI/CD
+node theme-validator.js theme.zip --json
+
+# Show only errors (hide warnings)
+node theme-validator.js theme.zip --errors-only
+```
+
+**Features:**
+- ✅ Official Ghost validator (gscan from TryGhost)
+- ✅ Same validation as Ghost Admin
+- ✅ Validates directories or ZIP files
+- ✅ Ghost v5/v6 compatibility checking
+- ✅ Finds deprecated helpers and syntax errors
+- ✅ CI/CD integration (JSON output, exit codes)
+- ✅ Categorized issues (errors, warnings, recommendations)
+
+**Validation levels:**
+- **Errors** - Must fix before upload (theme will be rejected)
+- **Warnings** - Should fix for best compatibility
+- **Recommendations** - Nice to have (best practices)
+
+**Safe deployment workflow:**
+```bash
+# 1. Validate before upload
+node theme-validator.js my-theme.zip
+
+# 2. Fix any errors
+
+# 3. Re-validate
+node theme-validator.js my-theme.zip
+
+# 4. Upload when clean
+node theme-manager.js upload my-theme.zip
+```
+
+**CI/CD integration:**
+```bash
+node theme-validator.js theme.zip --json
+if [ $? -eq 0 ]; then
+  node theme-manager.js upload theme.zip --activate
+fi
+```
+
+**Exit codes:** 0 = valid, 1 = errors found, 2 = invalid arguments
+
+See `references/themes.md` for complete validation documentation and common error fixes.
+
 ---
 
 ## Core Operations

@@ -22,7 +22,8 @@ This skill enables OpenClaw agents to interact with [Ghost CMS](https://ghost.or
 ✅ **Analytics** - Access subscriber stats, popular content, MRR  
 ✅ **Media Management** - Upload images and featured images  
 ✅ **User Management** - Invite and manage site users  
-✅ **Theme Management** - Upload, activate, switch, and manage custom themes
+✅ **Theme Management** - Upload, activate, switch, and manage custom themes  
+✅ **Theme Validation** - Validate themes before upload using official Ghost gscan validator
 
 ## Security
 
@@ -31,7 +32,7 @@ This skill enables OpenClaw agents to interact with [Ghost CMS](https://ghost.or
 - **🔒 Autonomous invocation disabled** - Requires explicit user commands
 - **📋 Capability declarations** - 8 capabilities clearly documented
 - **🔑 Credential documentation** - Multiple secure storage options
-- **📚 Operation classification** - ~45 operations (15 read-only, 30 destructive)
+- **📚 Operation classification** - ~50 operations (17 read-only, 33 destructive)
 - **⚠️ Security warnings** - Prominent warnings about public publishing
 - **📖 Comprehensive docs** - Complete API reference with safety guide
 - **🛡️ Recovery procedures** - Undo guide for all operations
