@@ -106,40 +106,112 @@ This directory provides a **local snippet library** that replicates Ghost's snip
 
 ### Migrating Ghost Snippets to Local Library
 
-**If you have existing snippets in Ghost**, you'll need to manually export them:
+**If you have existing snippets in Ghost**, use the automated snippet extractor!
 
-**Option 1: Via Ghost Editor (Manual)**
-1. Create a test post in Ghost
-2. Insert each snippet via editor
-3. Fetch the post via API (`GET /posts/{id}?formats=lexical`)
-4. Extract the snippet cards from the Lexical JSON
-5. Save as local JSON file
+#### **Automated Extraction (Recommended)**
+
+**Quick Workflow:**
+
+1. **Create extraction post in Ghost:**
+   - Create a new draft post
+   - For each snippet, add a paragraph: `SNIPPET: snippet-name`
+   - Insert the snippet below it
+   - Repeat for all snippets
+
+2. **Run extractor:**
+   ```bash
+   export GHOST_API_URL="https://your-blog.ghost.io"
+   export GHOST_ADMIN_KEY="your_admin_key"
+   node snippets/snippet-extractor.js your-post-slug
+   ```
+
+3. **Done!** All snippets saved to `library/`
+
+**Example extraction post structure:**
+
+```
+SNIPPET: signature
+[Insert your signature snippet here - will extract all cards]
+
+SNIPPET: newsletter-footer
+[Insert your newsletter footer snippet]
+
+SNIPPET: book-review-header
+[Insert your book review template]
+```
+
+**The extractor will:**
+- ✅ Parse the post Lexical JSON
+- ✅ Find each `SNIPPET: name` marker
+- ✅ Extract all cards until the next marker
+- ✅ Save each snippet as `library/snippet-name.json`
+- ✅ Preserve exact Lexical card structure
+- ✅ Work with any card types (bookmarks, callouts, buttons, etc.)
+
+**Extractor commands:**
+
+```bash
+# Validate format (dry run)
+node snippets/snippet-extractor.js my-snippets --validate
+
+# Extract snippets
+node snippets/snippet-extractor.js my-snippets
+
+# Preview without saving
+node snippets/snippet-extractor.js my-snippets --dry-run
+
+# Verbose output
+node snippets/snippet-extractor.js my-snippets --verbose
+
+# Custom marker prefix
+node snippets/snippet-extractor.js my-snippets --marker "--- SNIPPET:"
+
+# Help
+node snippets/snippet-extractor.js --help
+```
+
+**One-time setup:**
+1. Open Ghost editor
+2. Create draft "My Snippets"
+3. Insert all your snippets with markers
+4. Run extractor once
+5. Delete draft (or keep for reference)
+
+**After extraction:**
+- ✅ All snippets in `library/`
+- ✅ Programmatic access
+- ✅ Git version control
+- ✅ Use in automated post creation
+- ⚠️ Must re-extract if Ghost snippets change
+
+#### **Manual Extraction (Alternative)**
+
+**Option 1: Via Ghost Editor**
+1. Create test post, insert snippets individually
+2. Fetch via API: `GET /posts/{id}?formats=lexical`
+3. Extract cards from JSON manually
+4. Save as snippet files
 
 **Option 2: Database Access (Self-Hosted Only)**
-1. Query Ghost database `snippets` table
-2. Extract Lexical content for each snippet
-3. Convert to local JSON files
-
-**After migration:**
-- ✅ Programmatic access to your snippets
-- ✅ Use in automated post creation
-- ✅ Git version control
-- ⚠️ Must manually sync changes (no automatic sync with Ghost)
+1. Query Ghost `snippets` table
+2. Extract Lexical content
+3. Convert to JSON files
 
 ## Directory Structure
 
 ```
 snippets/
-├── README.md          # This file
-├── library/           # Your custom snippets
+├── README.md             # This file
+├── library/              # Your custom snippets
 │   ├── signature.json
 │   ├── cta-newsletter.json
 │   └── disclosure.json
-├── examples/          # Example snippets (reference)
+├── examples/             # Example snippets (reference)
 │   ├── signature-example.json
 │   ├── callout-tip.json
 │   └── button-cta.json
-└── ghost-snippet.js   # Snippet management CLI
+├── ghost-snippet.js      # Snippet management CLI
+└── snippet-extractor.js  # Extract snippets from Ghost post
 ```
 
 ## Usage
