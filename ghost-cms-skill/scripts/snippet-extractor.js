@@ -42,6 +42,64 @@ if (!fs.existsSync(LIBRARY_DIR)) {
 }
 
 /**
+ * Sanitize snippet name for safe filesystem usage
+ * Prevents path traversal and dangerous characters
+ * @param {string} name - Raw snippet name from marker
+ * @returns {string} Safe filename
+ */
+function sanitizeSnippetName(name) {
+  if (!name) {
+    throw new Error('Snippet name cannot be empty');
+  }
+  
+  // Remove path separators (prevent path traversal)
+  name = name.replace(/[/\\]/g, '-');
+  
+  // Remove dangerous characters
+  name = name.replace(/[<>:"|?*\x00-\x1F]/g, '');
+  
+  // Trim whitespace
+  name = name.trim();
+  
+  // Limit length (filesystem compatibility)
+  name = name.substring(0, 100);
+  
+  // Prevent directory traversal attempts
+  if (name === '.' || name === '..' || name.startsWith('.')) {
+    throw new Error(`Invalid snippet name: "${name}"`);
+  }
+  
+  // Ensure not empty after sanitization
+  if (!name) {
+    throw new Error('Snippet name invalid after sanitization');
+  }
+  
+  return name;
+}
+
+/**
+ * Validate snippet size
+ * @param {string} snippetName - Name of snippet
+ * @param {Array} cards - Snippet cards
+ */
+function validateSnippetSize(snippetName, cards) {
+  // Check card count
+  if (cards.length > 100) {
+    console.warn(`⚠️  Warning: Snippet "${snippetName}" has ${cards.length} cards (unusually large)`);
+  }
+  
+  // Check total size
+  const snippetJson = JSON.stringify(cards);
+  const sizeMB = snippetJson.length / (1024 * 1024);
+  
+  if (snippetJson.length > 1024 * 1024) { // 1MB limit
+    throw new Error(`Snippet "${snippetName}" is too large (${sizeMB.toFixed(2)}MB). Maximum 1MB allowed.`);
+  }
+  
+  return true;
+}
+
+/**
  * Extract snippets from a Ghost post
  * @param {string} postIdOrSlug - Post ID or slug
  * @param {Object} options - Extraction options
@@ -199,19 +257,31 @@ async function extractSnippets(postIdOrSlug, options = {}) {
     console.log(`   Cards: ${snippet.cards.length}`);
     console.log(`   Types: ${snippet.cards.map(c => c.type).join(', ')}`);
 
-    if (dryRun) {
-      console.log(`   [DRY RUN] Would save to: library/${snippet.name}.json`);
-    } else {
-      // Save snippet to library
-      const filename = `${snippet.name}.json`;
-      const filepath = join(LIBRARY_DIR, filename);
+    try {
+      // Sanitize filename for security
+      const safeName = sanitizeSnippetName(snippet.name);
       
-      fs.writeFileSync(filepath, JSON.stringify(snippet.cards, null, 2));
-      console.log(`   ✅ Saved: ${filepath}`);
-    }
+      // Validate size
+      validateSnippetSize(safeName, snippet.cards);
 
-    if (verbose) {
-      console.log(`   Preview: ${JSON.stringify(snippet.cards[0], null, 2).substring(0, 100)}...`);
+      if (dryRun) {
+        console.log(`   [DRY RUN] Would save to: library/${safeName}.json`);
+      } else {
+        // Save snippet to library
+        const filename = `${safeName}.json`;
+        const filepath = join(LIBRARY_DIR, filename);
+        
+        fs.writeFileSync(filepath, JSON.stringify(snippet.cards, null, 2));
+        console.log(`   ✅ Saved: ${filepath}`);
+      }
+
+      if (verbose) {
+        console.warn(`   ⚠️  Verbose mode: previews may contain sensitive data`);
+        console.log(`   Preview: ${JSON.stringify(snippet.cards[0], null, 2).substring(0, 100)}...`);
+      }
+    } catch (error) {
+      console.error(`   ❌ Error saving snippet: ${error.message}`);
+      continue;
     }
 
     console.log('');

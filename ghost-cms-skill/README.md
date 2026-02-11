@@ -474,6 +474,38 @@ This skill provides complete core functionality for Ghost CMS management. See [o
 - ✅ Image uploads
 - ✅ User management
 
+## Privacy & Security
+
+**What this skill stores locally:**
+- ✅ Extracted snippets in `snippets/library/` (your content, git-ignored)
+- ✅ Temporary test data in `extracted-cards/` (git-ignored)
+- ❌ NO credentials (user responsibility to secure)
+
+**What this skill transmits:**
+- ✅ API requests to YOUR Ghost site only (HTTPS)
+- ❌ NO third-party API calls
+- ❌ NO telemetry or analytics
+- ❌ NO external logging
+
+**Security features:**
+- ✅ Credentials never logged or transmitted to third parties
+- ✅ JWT tokens generated on-demand (5-minute expiry)
+- ✅ Input sanitization (filenames, sizes)
+- ✅ Operation classification (safe vs. destructive)
+- ✅ `.gitignore` prevents credential commits
+
+**Best practices:**
+- 🔒 Store API keys securely (1Password CLI, env vars, or `~/.config/ghost/`)
+- 🔄 Rotate API keys every 90 days
+- 🧪 Test on staging sites before production
+- 📝 Review content before publishing
+- 🚫 Never commit credentials to version control
+
+**For detailed security information:**
+- See [SECURITY.md](../SECURITY.md) for security policy and incident response
+- See [SKILL.md](SKILL.md) for operation classifications and security warnings
+- Report security issues privately to repository owner (NOT via GitHub issues)
+
 ## Resources
 
 - **Ghost Admin API Docs:** https://ghost.org/docs/admin-api/

@@ -2,14 +2,51 @@
 node_modules/
 package-lock.json
 
+# Credentials (CRITICAL - Never commit these!)
+**/api_key
+**/api_url
+**/.env
+**/.env.local
+**/.env.*.local
+**/config/ghost/
+.ghost-credentials
+
+# User Data (Personal content - keep local only)
+ghost-cms-skill/snippets/library/*.json
+!ghost-cms-skill/snippets/library/.gitkeep
+**/extracted-cards/*.json
+!**/extracted-cards/.gitkeep
+
 # Test files
 **/test-*.js
 **/update-teapot.js
+**/my-snippets*.json
+**/snippet-test*.json
 
 # IDE
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
+.editorconfig
 
 # OS
 .DS_Store
 Thumbs.db
+.AppleDouble
+.LSOverride
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Temporary
+*.tmp
+*.temp
+.cache/
+dist/
+build/
