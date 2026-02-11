@@ -1,5 +1,16 @@
 # Changelog - Ghost CMS Skill
 
+## [0.1.6] - 2026-02-11
+
+### 🔒 CRITICAL Security Fix
+- **Arbitrary File Write Prevention** (Issue #32) - Fixed critical vulnerability in `theme-manager.js`
+  - Added `validateOutputPath()` to prevent attackers from overwriting system files
+  - Restricts downloads to current working directory
+  - Prevents path traversal in directory and filename
+  - Requires .zip extension
+  - Blocks writes to system directories (/etc, ~/.ssh, etc.)
+  - **Severity:** CRITICAL - prevented arbitrary file overwrite attacks
+
 ## [0.1.5] - 2026-02-11
 
 ### 🔒 Security Fixes
