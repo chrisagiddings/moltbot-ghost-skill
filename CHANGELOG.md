@@ -1,5 +1,16 @@
 # Changelog - Ghost CMS Skill
 
+## [0.1.7] - 2026-02-11
+
+### 📝 Metadata Clarification
+- **Added explicit source information** to SKILL.md frontmatter
+  - Added `author: Chris Giddings`
+  - Added `homepage: https://github.com/chrisagiddings/moltbot-ghost-skill`
+  - Added `repository: https://github.com/chrisagiddings/moltbot-ghost-skill`
+  - Should resolve "unknown source" warnings from security scanners
+
+**Note:** SKILL.md metadata correctly declares `disable-model-invocation: true` and proper install spec. If registry-level flags still show mismatches after this version, it indicates a ClawdHub platform bug that requires escalation.
+
 ## [0.1.6] - 2026-02-11
 
 ### 🔒 CRITICAL Security Fix

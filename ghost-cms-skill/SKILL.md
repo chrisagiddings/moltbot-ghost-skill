@@ -1,6 +1,9 @@
 ---
 name: ghost-cms-skill
 description: Comprehensive Ghost CMS integration for creating, publishing, scheduling, and managing blog content, newsletters, members, and analytics. Use when working with Ghost blogs for content creation (drafts, publishing, scheduling), member/subscriber management (tiers, newsletters), comment moderation, or analytics (popular posts, subscriber growth). Supports all Ghost Admin API operations.
+author: Chris Giddings
+homepage: https://github.com/chrisagiddings/moltbot-ghost-skill
+repository: https://github.com/chrisagiddings/moltbot-ghost-skill
 metadata: {"openclaw":{"disable-model-invocation":true,"capabilities":["content-management","member-management","subscription-management","comment-management","user-management","media-management","destructive-operations","public-publishing"],"requires":{"env":["GHOST_ADMIN_KEY","GHOST_API_URL"],"bins":["node","npm"]},"primaryEnv":"GHOST_ADMIN_KEY","install":{"type":"npm","directory":"scripts","command":"npm install","dependencies":["form-data@^4.0.5","jsonwebtoken@^9.0.3"]},"credentials":{"types":[{"type":"file","locations":["~/.config/ghost/api_key","~/.config/ghost/api_url"],"description":"Ghost Admin API credentials"},{"type":"env","variables":[{"name":"GHOST_ADMIN_KEY","description":"Ghost Admin API key (JWT)","required":true},{"name":"GHOST_API_URL","description":"Ghost site URL (Ghost Pro OR self-hosted, include :PORT if needed)","required":true}]}]}}}
 ---
 
