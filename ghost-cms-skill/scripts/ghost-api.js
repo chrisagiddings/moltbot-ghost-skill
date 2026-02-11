@@ -33,10 +33,32 @@ function generateToken() {
   });
 }
 
+// Validate endpoint to prevent URL injection
+function validateEndpoint(endpoint) {
+  // Must start with /
+  if (!endpoint.startsWith('/')) {
+    throw new Error('Invalid endpoint: must start with /');
+  }
+  
+  // Must not contain path traversal sequences
+  if (endpoint.includes('..') || endpoint.includes('//')) {
+    throw new Error('Invalid endpoint: path traversal not allowed');
+  }
+  
+  // Must only contain valid URL path characters
+  const validPathRegex = /^\/[\w\-\/.?=&%]*$/;
+  if (!validPathRegex.test(endpoint)) {
+    throw new Error('Invalid endpoint: contains invalid characters');
+  }
+  
+  return endpoint;
+}
+
 // Make API request
 function ghostApi(endpoint, method = 'GET', data = null) {
   const token = generateToken();
-  const url = new URL(`${apiUrl}/ghost/api/admin${endpoint}`);
+  const validatedEndpoint = validateEndpoint(endpoint);
+  const url = new URL(`${apiUrl}/ghost/api/admin${validatedEndpoint}`);
   
   const options = {
     method,
