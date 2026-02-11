@@ -83,6 +83,40 @@ If you have existing snippets in Ghost (e.g., "Signature", "Book Insert", "Newsl
 
 ---
 
+## 🔒 Security: External Storage
+
+**Why snippets are stored outside the repository:**
+
+1. **Defense in depth** - Even with `.gitignore`, keeping user data outside the repo is safer
+2. **No accidental commits** - Impossible to commit user content to git
+3. **Clear separation** - User data vs. source code isolation
+4. **Secure permissions** - Files created with owner-only permissions (0600)
+5. **Easy backup** - Standard user data directory (`~/.local/share/`)
+
+**First-time setup:**
+- On first use, you'll be prompted to configure snippet storage location
+- Default: `~/.local/share/ghost-snippets/` (recommended)
+- Custom locations supported via environment variable or configuration
+
+**Configuration:**
+```bash
+# View current location
+cat ~/.config/ghost/snippets-config.json
+
+# Use custom location (temporary)
+export GHOST_SNIPPETS_DIR="/path/to/snippets"
+
+# Use custom location (permanent)
+echo '{"libraryPath":"/path/to/snippets"}' > ~/.config/ghost/snippets-config.json
+```
+
+**Migration:**
+- Existing snippets are automatically migrated from repository to external location
+- Original files remain in `ghost-cms-skill/snippets/library/` (can be deleted manually)
+- Examples remain in repository (safe to commit)
+
+---
+
 ## The Solution: Local Snippet Library
 
 This directory provides a **local snippet library** that replicates Ghost's snippet functionality for programmatic use:
@@ -205,21 +239,29 @@ node scripts/snippet-extractor.js --help
 ## Directory Structure
 
 ```
+~/.local/share/ghost-snippets/  # Your snippet library (EXTERNAL)
+├── signature.json               # Secure, owner-only permissions
+├── cta-newsletter.json
+└── disclosure.json
+
 ghost-cms-skill/
 ├── snippets/
-│   ├── README.md             # This file
-│   ├── library/              # Your custom snippets
-│   │   ├── signature.json
-│   │   ├── cta-newsletter.json
-│   │   └── disclosure.json
-│   ├── examples/             # Example snippets (reference)
+│   ├── README.md                # This file
+│   ├── examples/                # Example snippets (safe to commit)
 │   │   ├── signature-example.json
 │   │   ├── callout-tip.json
 │   │   └── button-cta.json
-│   └── ghost-snippet.js      # Snippet management CLI
+│   ├── ghost-snippet.js         # Snippet management CLI
+│   └── snippet-config.js        # Configuration management
 └── scripts/
-    └── snippet-extractor.js  # Extract snippets from Ghost post
+    └── snippet-extractor.js     # Extract snippets from Ghost post
+
+~/.config/ghost/
+└── snippets-config.json         # Library location configuration
 ```
+
+**🔒 Security Note:**  
+Snippets are stored **OUTSIDE the repository** by default (`~/.local/share/ghost-snippets/`) to prevent accidental git commits and isolate user content from source code. This is a defense-in-depth security measure.
 
 ## Usage
 

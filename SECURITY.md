@@ -42,9 +42,11 @@ We will acknowledge your email within 48 hours and provide a detailed response i
 - ❌ Share data with third parties
 
 **This skill stores locally:**
-- User-extracted snippets (`snippets/library/`) - your content only
-- Temporary Lexical JSON (`extracted-cards/`) - test data only
-- NO credentials (user responsibility to secure)
+- **User snippets** - `~/.local/share/ghost-snippets/` (OUTSIDE repository, owner-only permissions 0600)
+- **Temporary test data** - `extracted-cards/` (git-ignored, inside repository)
+- **NO credentials** stored by skill (user responsibility to secure)
+
+**🔒 Defense-in-depth:** Snippets are stored in a standard user data directory OUTSIDE the repository to prevent accidental commits and provide isolation from source code.
 
 **This skill transmits:**
 - ✅ API requests to YOUR Ghost site only (via HTTPS)

@@ -32,14 +32,12 @@
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import fs from 'fs';
+import { getLibraryPath, ensureConfigured } from '../snippets/snippet-config.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const LIBRARY_DIR = join(__dirname, '..', 'snippets', 'library');
 
-// Ensure library directory exists
-if (!fs.existsSync(LIBRARY_DIR)) {
-  fs.mkdirSync(LIBRARY_DIR, { recursive: true });
-}
+// Get library path (will be initialized in main function)
+let LIBRARY_DIR = getLibraryPath();
 
 /**
  * Sanitize snippet name for safe filesystem usage
@@ -48,33 +46,69 @@ if (!fs.existsSync(LIBRARY_DIR)) {
  * @returns {string} Safe filename
  */
 function sanitizeSnippetName(name) {
-  if (!name) {
+  if (!name || typeof name !== 'string') {
     throw new Error('Snippet name cannot be empty');
   }
   
   // Remove path separators (prevent path traversal)
   name = name.replace(/[/\\]/g, '-');
   
-  // Remove dangerous characters
-  name = name.replace(/[<>:"|?*\x00-\x1F]/g, '');
+  // Remove dangerous characters and control codes
+  name = name.replace(/[<>:"|?*\x00-\x1F\x7F]/g, '');
   
-  // Trim whitespace
-  name = name.trim();
+  // Remove leading/trailing dots and whitespace
+  name = name.trim().replace(/^\.+|\.+$/g, '');
+  
+  // Replace multiple spaces/dashes with single dash
+  name = name.replace(/[\s-]+/g, '-');
   
   // Limit length (filesystem compatibility)
   name = name.substring(0, 100);
   
   // Prevent directory traversal attempts
-  if (name === '.' || name === '..' || name.startsWith('.')) {
-    throw new Error(`Invalid snippet name: "${name}"`);
+  if (name === '.' || name === '..' || name.includes('..')) {
+    throw new Error(`Invalid snippet name (path traversal attempt): "${name}"`);
+  }
+  
+  // Prevent hidden files
+  if (name.startsWith('.')) {
+    throw new Error(`Invalid snippet name (hidden file): "${name}"`);
   }
   
   // Ensure not empty after sanitization
-  if (!name) {
+  if (!name || name.length === 0) {
     throw new Error('Snippet name invalid after sanitization');
   }
   
   return name;
+}
+
+/**
+ * Sanitize marker prefix for safe regex usage
+ * Prevents regex injection
+ * @param {string} marker - Raw marker prefix
+ * @returns {string} Safe marker
+ */
+function sanitizeMarker(marker) {
+  if (!marker || typeof marker !== 'string') {
+    return 'SNIPPET:';
+  }
+  
+  // Limit length
+  marker = marker.substring(0, 50);
+  
+  // Remove characters that could cause regex issues
+  marker = marker.replace(/[^\w\s:.-]/g, '');
+  
+  // Trim
+  marker = marker.trim();
+  
+  // Fallback if empty
+  if (!marker) {
+    return 'SNIPPET:';
+  }
+  
+  return marker;
 }
 
 /**
@@ -128,15 +162,22 @@ async function extractSnippets(postIdOrSlug, options = {}) {
     throw new Error('Ghost credentials required. Set environment variables GHOST_API_URL and GHOST_ADMIN_KEY, or create config files in ~/.config/ghost/');
   }
 
-  const {
+  let {
     markerPrefix = 'SNIPPET:',
     dryRun = false,
     verbose = false
   } = options;
+  
+  // Sanitize marker prefix for security
+  markerPrefix = sanitizeMarker(markerPrefix);
 
   console.log('╔════════════════════════════════════════════════════════╗');
   console.log('║         Ghost Snippet Extractor                        ║');
   console.log('╚════════════════════════════════════════════════════════╝\n');
+  
+  if (markerPrefix !== 'SNIPPET:') {
+    console.log(`🔍 Using custom marker: "${markerPrefix}"\n`);
+  }
 
   // Create ghostApi function with credentials
   const jwt = await import('jsonwebtoken');
@@ -341,9 +382,14 @@ async function validatePost(postIdOrSlug, options = {}) {
 
 // CLI Usage
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const args = process.argv.slice(2);
-  
-  if (args.includes('--help') || args.length === 0) {
+  // Async wrapper for configuration
+  (async () => {
+    // Ensure library is configured before extraction
+    LIBRARY_DIR = await ensureConfigured(process.stdout.isTTY);
+    
+    const args = process.argv.slice(2);
+    
+    if (args.includes('--help') || args.length === 0) {
     console.log(`
 Ghost Snippet Extractor
 
@@ -453,6 +499,7 @@ REQUIREMENTS:
     console.error(`\n❌ Error: ${error.message}\n`);
     process.exit(1);
   }
+  })(); // End async wrapper
 }
 
 export { extractSnippets, validatePost };

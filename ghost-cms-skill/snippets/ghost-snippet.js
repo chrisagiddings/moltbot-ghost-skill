@@ -10,10 +10,13 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { getLibraryPath, getExamplesPath, ensureConfigured } from './snippet-config.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const LIBRARY_DIR = path.join(__dirname, 'library');
-const EXAMPLES_DIR = path.join(__dirname, 'examples');
+
+// Get library path (external location for security)
+let LIBRARY_DIR = getLibraryPath();
+const EXAMPLES_DIR = getExamplesPath();
 
 /**
  * Load a snippet from library or examples
@@ -95,9 +98,14 @@ export function injectSnippet(snippet, lexicalContent, position = 'end') {
 
 // CLI Usage
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const command = process.argv[2];
-  
-  if (!command || command === 'help') {
+  // Async wrapper for configuration
+  (async () => {
+    // Ensure library is configured before running commands
+    LIBRARY_DIR = await ensureConfigured(process.stdout.isTTY);
+    
+    const command = process.argv[2];
+    
+    if (!command || command === 'help') {
     console.log(`
 Ghost Snippet Manager
 
@@ -239,4 +247,5 @@ For programmatic usage, import functions:
     console.error(`Error: ${error.message}`);
     process.exit(1);
   }
+  })(); // End async wrapper
 }
