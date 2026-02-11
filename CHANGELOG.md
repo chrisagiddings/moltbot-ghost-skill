@@ -1,5 +1,13 @@
 # Changelog - Ghost CMS Skill
 
+## [0.1.3] - 2026-02-11
+
+### 🔧 Fixes
+- **ClawdHub Slug Correction** - Republished to correct slug `ghost-cms-skill`
+  - Removed duplicate `ghost-cms` entry (old/incorrect slug)
+  - Ensures consistent slug matches directory name
+  - No functional changes
+
 ## [0.1.2] - 2026-02-11
 
 ### 🔧 Fixes
