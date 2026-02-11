@@ -1,5 +1,34 @@
 # Changelog - Ghost CMS Skill
 
+## [0.1.8] - 2026-02-11
+
+### 🔒 CRITICAL Security Fixes (Multiple Vulnerabilities)
+
+VirusTotal scan identified multiple critical path traversal and arbitrary file write vulnerabilities. All have been fixed:
+
+- **Issue #33:** Path traversal in ghost-crud.js API endpoints (FIXED)
+  - Added `validatePostIdentifier()` to prevent path traversal via slugOrId/postId
+  - Applied to readPost(), updatePost(), deletePost()
+  - Prevents attackers from accessing unintended API endpoints
+
+- **Issue #35:** Path traversal in theme-manager.js API endpoints (FIXED)
+  - Added `validateThemeName()` to prevent path traversal via themeName
+  - Applied to downloadTheme(), activate(), delete()
+  - Prevents endpoint manipulation attacks
+
+- **Issue #36:** Arbitrary file write/delete in ghost-snippet.js (FIXED)
+  - Added `validateSnippetName()` to prevent path traversal
+  - Applied to loadSnippet(), saveSnippet(), deleteSnippet()
+  - Prevents attackers from targeting system files
+
+- **Issue #34:** snippet-extractor.js security (VERIFIED SAFE)
+  - Already has comprehensive `sanitizeSnippetName()` function
+  - VirusTotal confirmed: "demonstrates good security practices"
+  - No fix needed - false positive
+
+**Before:** Multiple critical vulnerabilities allowing path traversal and arbitrary file operations  
+**After:** All user input validated before API endpoint construction and file operations
+
 ## [0.1.7] - 2026-02-11
 
 ### 📝 Metadata Clarification
