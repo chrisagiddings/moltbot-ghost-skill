@@ -21,7 +21,8 @@ This skill enables OpenClaw agents to interact with [Ghost CMS](https://ghost.or
 ✅ **Newsletter Management** - Configure newsletters and email campaigns  
 ✅ **Analytics** - Access subscriber stats, popular content, MRR  
 ✅ **Media Management** - Upload images and featured images  
-✅ **User Management** - Invite and manage site users
+✅ **User Management** - Invite and manage site users  
+✅ **Theme Management** - Upload, activate, switch, and manage custom themes
 
 ## Security
 

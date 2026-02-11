@@ -171,6 +171,62 @@ node scripts/snippet-extractor.js --help
 
 See `snippets/README.md` for complete documentation.
 
+### Theme Manager
+
+**Purpose:** Upload, activate, switch, and manage Ghost themes programmatically.
+
+**Why needed:** Automate theme deployments, switch themes, manage theme versions.
+
+**Usage:**
+```bash
+cd scripts
+
+# List all installed themes
+node theme-manager.js list
+
+# Upload theme ZIP
+node theme-manager.js upload /path/to/theme.zip
+
+# Upload and activate immediately
+node theme-manager.js upload /path/to/theme.zip --activate
+
+# Activate existing theme
+node theme-manager.js activate theme-name
+
+# Download theme backup
+node theme-manager.js download theme-name backup.zip
+
+# Delete theme (cannot delete active theme)
+node theme-manager.js delete old-theme
+
+# Show current active theme
+node theme-manager.js active
+```
+
+**Features:**
+- ✅ Upload custom themes from ZIP files
+- ✅ Switch between installed themes
+- ✅ Download theme backups
+- ✅ Delete unused themes
+- ✅ Validation and error handling
+- ✅ **Immediate activation** - theme changes are public instantly
+
+**⚠️ Important:**
+- Theme activation is **immediate and public** - site appearance changes instantly
+- Cannot delete the currently active theme (switch first)
+- Themes must be valid Ghost theme ZIP files
+
+**Workflow:**
+```bash
+# Safe theme switching with rollback
+node theme-manager.js active              # Note current theme
+node theme-manager.js activate new-theme  # Switch to new theme
+# Test site in browser
+node theme-manager.js activate old-theme  # Rollback if needed
+```
+
+See `references/themes.md` for complete theme management documentation and best practices.
+
 ---
 
 ## Core Operations

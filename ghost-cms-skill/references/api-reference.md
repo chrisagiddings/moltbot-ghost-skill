@@ -371,6 +371,35 @@ Returns:
 - `member.added`, `member.deleted`, `member.edited`
 - `member.subscription.added`, `member.subscription.deleted`, `member.subscription.updated`
 
+## Theme Management
+
+| Endpoint | Method | Description | Safety |
+|----------|--------|-------------|--------|
+| `/themes/` | GET | List installed themes | ✅ Safe |
+| `/themes/upload/` | POST | Upload theme ZIP | ⚠️ Destructive |
+| `/themes/${name}/activate/` | PUT | Activate theme | ⚠️ Destructive |
+| `/themes/${name}/download/` | GET | Download theme ZIP | ✅ Safe |
+| `/themes/${name}/` | DELETE | Delete theme | ⚠️ Destructive |
+
+**Upload parameters:**
+- `file` - Theme ZIP file (multipart/form-data)
+- `activate` - Optional: activate after upload (true/false)
+
+**Notes:**
+- Themes control site appearance - activation is **immediate and public**
+- Cannot delete active theme (switch first)
+- Themes must be valid Ghost theme ZIP files
+- See [references/themes.md](themes.md) for complete documentation
+
+**CLI tool:**
+```bash
+# See theme-manager.js for full theme management
+node theme-manager.js list
+node theme-manager.js upload theme.zip --activate
+node theme-manager.js activate theme-name
+node theme-manager.js delete old-theme
+```
+
 ## Response Format
 
 All responses follow this structure:
