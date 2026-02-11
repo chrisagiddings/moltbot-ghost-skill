@@ -1,5 +1,23 @@
 # Changelog - Ghost CMS Skill
 
+## [0.1.5] - 2026-02-11
+
+### 🔒 Security Fixes
+- **URL Injection Prevention** (Issue #29) - Fixed potential URL injection vulnerability in `ghost-api.js`
+  - Added endpoint validation to prevent path traversal and malicious input
+  - Validates endpoint format, prevents `..` and `//` sequences
+  - Restricts to valid URL path characters only
+
+- **Deprecated Dependencies** (Issue #30) - Made `gscan` optional to eliminate transitive vulnerabilities
+  - Moved `gscan` from dependencies to optionalDependencies
+  - Core Ghost API functionality now has zero vulnerabilities
+  - Theme validation feature still available by installing: `cd scripts && npm install gscan`
+  - All 19 npm audit vulnerabilities were from gscan's deprecated dependencies (glob, request, uuid, etc.)
+
+### 📝 Documentation
+- Updated SKILL.md to note gscan is optional
+- Added installation instructions for theme validation feature
+
 ## [0.1.4] - 2026-02-11
 
 ### 🔧 Fixes
