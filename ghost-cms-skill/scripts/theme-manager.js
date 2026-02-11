@@ -6,7 +6,7 @@
  */
 
 import { readFileSync, createWriteStream } from 'fs';
-import { basename } from 'path';
+import { basename, resolve, dirname, extname } from 'path';
 import https from 'https';
 import FormData from 'form-data';
 import jwt from 'jsonwebtoken';
@@ -114,8 +114,53 @@ function uploadTheme(zipPath, activate = false) {
   });
 }
 
+// Validate output path to prevent arbitrary file write
+function validateOutputPath(outputPath) {
+  if (!outputPath) {
+    throw new Error('Output path is required');
+  }
+  
+  // Resolve to absolute path
+  const absolutePath = resolve(outputPath);
+  
+  // Get the directory part
+  const outputDir = dirname(absolutePath);
+  
+  // Ensure output directory is within current working directory
+  // This prevents writing to system directories like /etc, ~/.ssh, etc.
+  const cwd = process.cwd();
+  const resolvedOutputDir = resolve(outputDir);
+  
+  if (!resolvedOutputDir.startsWith(cwd)) {
+    throw new Error(`Invalid output path: must be within current directory (${cwd})`);
+  }
+  
+  // Prevent path traversal in filename
+  const filename = basename(absolutePath);
+  if (filename.includes('..') || filename.includes('/') || filename.includes('\\')) {
+    throw new Error('Invalid filename: path traversal not allowed');
+  }
+  
+  // Require .zip extension
+  const ext = extname(filename).toLowerCase();
+  if (ext !== '.zip') {
+    throw new Error('Invalid filename: must have .zip extension');
+  }
+  
+  // Additional safety: filename must not be empty after removing extension
+  const nameWithoutExt = basename(filename, ext);
+  if (!nameWithoutExt || nameWithoutExt.length === 0) {
+    throw new Error('Invalid filename: name cannot be empty');
+  }
+  
+  return absolutePath;
+}
+
 // Download theme
 function downloadTheme(themeName, outputPath) {
+  // CRITICAL: Validate output path to prevent arbitrary file write
+  const validatedPath = validateOutputPath(outputPath);
+  
   const token = generateToken();
   const url = new URL(`${apiUrl}/ghost/api/admin/themes/${themeName}/download/`);
   
@@ -134,12 +179,12 @@ function downloadTheme(themeName, outputPath) {
         return;
       }
       
-      const fileStream = createWriteStream(outputPath);
+      const fileStream = createWriteStream(validatedPath);
       res.pipe(fileStream);
       
       fileStream.on('finish', () => {
         fileStream.close();
-        resolve({ success: true, path: outputPath });
+        resolve({ success: true, path: validatedPath });
       });
       
       fileStream.on('error', reject);
