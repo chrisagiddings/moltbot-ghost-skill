@@ -120,9 +120,14 @@ This directory provides a **local snippet library** that replicates Ghost's snip
 
 2. **Run extractor:**
    ```bash
+   # Credentials from env vars (optional)
    export GHOST_API_URL="https://your-blog.ghost.io"
    export GHOST_ADMIN_KEY="your_admin_key"
-   node snippets/snippet-extractor.js your-post-slug
+   
+   # Or from config files (auto-detected)
+   # ~/.config/ghost/api_url and ~/.config/ghost/api_key
+   
+   node scripts/snippet-extractor.js your-post-slug
    ```
 
 3. **Done!** All snippets saved to `library/`
@@ -152,22 +157,22 @@ SNIPPET: book-review-header
 
 ```bash
 # Validate format (dry run)
-node snippets/snippet-extractor.js my-snippets --validate
+node scripts/snippet-extractor.js my-snippets --validate
 
 # Extract snippets
-node snippets/snippet-extractor.js my-snippets
+node scripts/snippet-extractor.js my-snippets
 
 # Preview without saving
-node snippets/snippet-extractor.js my-snippets --dry-run
+node scripts/snippet-extractor.js my-snippets --dry-run
 
 # Verbose output
-node snippets/snippet-extractor.js my-snippets --verbose
+node scripts/snippet-extractor.js my-snippets --verbose
 
 # Custom marker prefix
-node snippets/snippet-extractor.js my-snippets --marker "--- SNIPPET:"
+node scripts/snippet-extractor.js my-snippets --marker "--- SNIPPET:"
 
 # Help
-node snippets/snippet-extractor.js --help
+node scripts/snippet-extractor.js --help
 ```
 
 **One-time setup:**
@@ -200,18 +205,20 @@ node snippets/snippet-extractor.js --help
 ## Directory Structure
 
 ```
-snippets/
-├── README.md             # This file
-├── library/              # Your custom snippets
-│   ├── signature.json
-│   ├── cta-newsletter.json
-│   └── disclosure.json
-├── examples/             # Example snippets (reference)
-│   ├── signature-example.json
-│   ├── callout-tip.json
-│   └── button-cta.json
-├── ghost-snippet.js      # Snippet management CLI
-└── snippet-extractor.js  # Extract snippets from Ghost post
+ghost-cms-skill/
+├── snippets/
+│   ├── README.md             # This file
+│   ├── library/              # Your custom snippets
+│   │   ├── signature.json
+│   │   ├── cta-newsletter.json
+│   │   └── disclosure.json
+│   ├── examples/             # Example snippets (reference)
+│   │   ├── signature-example.json
+│   │   ├── callout-tip.json
+│   │   └── button-cta.json
+│   └── ghost-snippet.js      # Snippet management CLI
+└── scripts/
+    └── snippet-extractor.js  # Extract snippets from Ghost post
 ```
 
 ## Usage
