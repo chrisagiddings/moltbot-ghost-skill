@@ -1,7 +1,7 @@
 ---
 name: ghost-cms-skill
 description: Comprehensive Ghost CMS integration for creating, publishing, scheduling, and managing blog content, newsletters, members, and analytics. Use when working with Ghost blogs for content creation (drafts, publishing, scheduling), member/subscriber management (tiers, newsletters), comment moderation, or analytics (popular posts, subscriber growth). Supports all Ghost Admin API operations.
-metadata: {"openclaw":{"disable-model-invocation":true,"capabilities":["content-management","member-management","subscription-management","comment-management","user-management","media-management","destructive-operations","public-publishing"],"requires":{"env":["GHOST_ADMIN_KEY","GHOST_API_URL"],"bins":["node","npm"]},"primaryEnv":"GHOST_ADMIN_KEY","credentials":{"types":[{"type":"file","locations":["~/.config/ghost/api_key","~/.config/ghost/api_url"],"description":"Ghost Admin API credentials"},{"type":"env","variables":[{"name":"GHOST_ADMIN_KEY","description":"Ghost Admin API key (JWT)","required":true},{"name":"GHOST_API_URL","description":"Ghost site URL (e.g., https://yourblog.ghost.io)","required":true}]}]}}}
+metadata: {"openclaw":{"disable-model-invocation":true,"capabilities":["content-management","member-management","subscription-management","comment-management","user-management","media-management","destructive-operations","public-publishing"],"requires":{"env":["GHOST_ADMIN_KEY","GHOST_API_URL"],"bins":["node","npm"]},"primaryEnv":"GHOST_ADMIN_KEY","credentials":{"types":[{"type":"file","locations":["~/.config/ghost/api_key","~/.config/ghost/api_url"],"description":"Ghost Admin API credentials"},{"type":"env","variables":[{"name":"GHOST_ADMIN_KEY","description":"Ghost Admin API key (JWT)","required":true},{"name":"GHOST_API_URL","description":"Ghost site URL (Ghost Pro OR self-hosted, include :PORT if needed)","required":true}]}]}}}
 ---
 
 # Ghost CMS
@@ -63,14 +63,35 @@ For detailed operation documentation, see [api-reference.md](references/api-refe
    ```bash
    # Add to your shell profile (~/.zshrc, ~/.bashrc)
    export GHOST_ADMIN_KEY="YOUR_ADMIN_API_KEY"
-   export GHOST_API_URL="https://yourblog.ghost.io"
+   export GHOST_API_URL="YOUR_GHOST_URL"
    ```
+
+   **API URL Examples (works with ALL hosting types):**
+   ```bash
+   # Ghost(Pro) hosted
+   export GHOST_API_URL="https://yourblog.ghost.io"
+   
+   # Self-hosted with reverse proxy (production)
+   export GHOST_API_URL="https://blog.yourdomain.com"
+   
+   # Self-hosted development (Ghost default port 2368)
+   export GHOST_API_URL="http://localhost:2368"
+   
+   # Self-hosted with custom port
+   export GHOST_API_URL="https://ghost.example.com:8080"
+   ```
+
+   **Important:**
+   - Always include protocol (`http://` or `https://`)
+   - Include `:PORT` if Ghost runs on non-standard port
+   - Do NOT include trailing slash
+   - Do NOT include `/ghost/api/admin` (added automatically)
 
    **Option B: Config Files**
    ```bash
    mkdir -p ~/.config/ghost
    echo "YOUR_ADMIN_API_KEY" > ~/.config/ghost/api_key
-   echo "https://yourblog.ghost.io" > ~/.config/ghost/api_url
+   echo "YOUR_GHOST_URL" > ~/.config/ghost/api_url
    
    # Secure the files (owner read-only)
    chmod 600 ~/.config/ghost/api_key
@@ -83,7 +104,7 @@ For detailed operation documentation, see [api-reference.md](references/api-refe
    op item create --category=API_CREDENTIAL \
      --title="Ghost Admin API" \
      admin_key[password]="YOUR_ADMIN_API_KEY" \
-     api_url[text]="https://yourblog.ghost.io"
+     api_url[text]="YOUR_GHOST_URL"
 
    # Use in commands
    export GHOST_ADMIN_KEY=$(op read "op://Private/Ghost Admin API/admin_key")
@@ -95,6 +116,7 @@ For detailed operation documentation, see [api-reference.md](references/api-refe
    - Rotate keys every 90 days (create new integration, revoke old)
    - Never commit to git or share keys publicly
    - Consider separate keys for production vs. staging
+   - **HTTPS recommended:** Use HTTPS for production (HTTP acceptable for localhost only)
 
 3. **Test connection:**
    See [setup.md](references/setup.md) for detailed authentication and troubleshooting.

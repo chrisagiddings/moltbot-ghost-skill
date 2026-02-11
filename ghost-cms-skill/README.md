@@ -9,7 +9,8 @@
 This skill enables OpenClaw agents to interact with [Ghost CMS](https://ghost.org), the open-source publishing platform. Manage content, members, subscriptions, comments, and analytics—all via the Ghost Admin API.
 
 **Status:** ✅ **Production Ready** (Security hardened Feb 10, 2026)  
-**API Version:** Ghost Admin API v5.0
+**API Version:** Ghost Admin API v5.0  
+**Hosting:** ✅ **Works with Ghost(Pro) AND self-hosted Ghost installations** (v5.0+)
 
 ## Features
 
@@ -72,14 +73,22 @@ See [SKILL.md](SKILL.md) for detailed security information and [references/api-r
    ```bash
    # Add to your shell profile (~/.zshrc, ~/.bashrc)
    export GHOST_ADMIN_KEY="YOUR_ADMIN_API_KEY"
-   export GHOST_API_URL="https://yourblog.ghost.io"
+   export GHOST_API_URL="YOUR_GHOST_URL"
+   
+   # Examples (works with ALL hosting types):
+   # Ghost(Pro):        https://yourblog.ghost.io
+   # Self-hosted:       https://blog.yourdomain.com
+   # Development:       http://localhost:2368
+   # Custom port:       https://ghost.example.com:8080
    ```
+   
+   **See [SKILL.md](SKILL.md#quick-setup) for detailed URL format guide and examples.**
 
    **Option B: Config Files**
    ```bash
    mkdir -p ~/.config/ghost
    echo "YOUR_ADMIN_API_KEY" > ~/.config/ghost/api_key
-   echo "https://yourblog.ghost.io" > ~/.config/ghost/api_url
+   echo "YOUR_GHOST_URL" > ~/.config/ghost/api_url
    chmod 600 ~/.config/ghost/api_key ~/.config/ghost/api_url
    ```
 
@@ -89,7 +98,7 @@ See [SKILL.md](SKILL.md) for detailed security information and [references/api-r
    op item create --category=API_CREDENTIAL \
      --title="Ghost Admin API" \
      admin_key[password]="YOUR_ADMIN_API_KEY" \
-     api_url[text]="https://yourblog.ghost.io"
+     api_url[text]="YOUR_GHOST_URL"
 
    # Use in commands
    export GHOST_ADMIN_KEY=$(op read "op://Private/Ghost Admin API/admin_key")

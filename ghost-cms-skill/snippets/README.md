@@ -155,7 +155,7 @@ This directory provides a **local snippet library** that replicates Ghost's snip
 2. **Run extractor:**
    ```bash
    # Credentials from env vars (optional)
-   export GHOST_API_URL="https://your-blog.ghost.io"
+   export GHOST_API_URL="YOUR_GHOST_URL"  # See SKILL.md for URL format
    export GHOST_ADMIN_KEY="your_admin_key"
    
    # Or from config files (auto-detected)
