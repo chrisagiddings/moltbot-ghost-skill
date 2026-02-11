@@ -333,3 +333,50 @@ export {
   createPaywallCard,
   createEmbedCard
 };
+
+/**
+ * Load and inject a snippet into Lexical content
+ * @param {string} snippetName - Name of snippet from library
+ * @param {Object} lexicalDoc - Existing Lexical document
+ * @param {string} position - 'start', 'end', or number
+ * @returns {Object} Updated Lexical document
+ */
+async function injectSnippetFromLibrary(snippetName, lexicalDoc, position = 'end') {
+  // Dynamic import of snippet manager
+  const { loadSnippet, injectSnippet } = await import('../snippets/ghost-snippet.js');
+  
+  const snippet = loadSnippet(snippetName);
+  return injectSnippet(snippet, lexicalDoc, position);
+}
+
+/**
+ * Build Lexical document with snippet at end
+ * @param {Array} content - Main content cards
+ * @param {string} snippetName - Snippet to append
+ * @returns {Object} Complete Lexical document
+ */
+async function buildLexicalWithSnippet(content, snippetName) {
+  const lexical = buildLexical(content);
+  return await injectSnippetFromLibrary(snippetName, lexical, 'end');
+}
+
+// Update exports
+export {
+  createTextNode,
+  createParagraph,
+  createHeading,
+  buildLexical,
+  textToLexical,
+  structuredToLexical,
+  stringifyLexical,
+  createButtonCard,
+  createToggleCard,
+  createVideoCard,
+  createAudioCard,
+  createFileCard,
+  createProductCard,
+  createPaywallCard,
+  createEmbedCard,
+  injectSnippetFromLibrary,
+  buildLexicalWithSnippet
+};
